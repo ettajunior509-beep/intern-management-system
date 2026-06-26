@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Evaluations – InternMS Admin</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Admin Portal</div></div></div>
+     <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item active" data-page="dashboard.html"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="interns.html"   class="nav-item" data-page="interns.html"><span class="nav-icon"><i class="fa-solid fa-users"></i></span>Interns</a>
+      <a href="tasks.html"     class="nav-item" data-page="tasks.html"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>Tasks</a>
+      <a href="attendance.html"class="nav-item" data-page="attendance.html"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <div class="nav-section-label">Tools</div>
+      <a href="calendar.html"  class="nav-item" data-page="calendar.html"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <a href="reports.html"   class="nav-item" data-page="reports.html"><span class="nav-icon"><i class="fa-regular fa-address-book"></i></span>Reports</a>
+      <a href="evaluations.html" class="nav-item" data-page="evaluations.html"><span class="nav-icon"><i class="fa-brands fa-galactic-senate"></i></span>Evaluations</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"   class="nav-item" data-page="profile.html"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">A</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">Evaluations</div><div class="topbar-subtitle">Grade intern performance</div></div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="grid-2">
+        <!-- Intern List -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Active Interns</div></div>
+          <div id="intern-list"><p class="text-muted">Loading...</p></div>
+        </div>
+        <!-- Evaluation Form -->
+        <div class="card">
+          <div class="card-header"><div class="card-title" id="eval-title">Select an Intern</div></div>
+          <div id="eval-form-wrap">
+            <div class="empty-state"><div class="empty-icon"></div><p>Select an intern from the list to evaluate them.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireAdmin(); populateSidebarUser(); initLogout();
+let selectedInternId = null;
+
+async function loadInterns() {
+  try {
+    const interns = await apiFetch('/interns?status=approved');
+    const el = document.getElementById('intern-list');
+    if(!interns.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">👥</div><p>No approved interns</p></div>';return;}
+    el.innerHTML = interns.map(i=>`
+      <div class="flex-between" style="padding:12px;border-radius:8px;cursor:pointer;transition:var(--transition);margin-bottom:4px;" id="intern-row-${i.id}" onclick="selectIntern(${i.id},'${i.full_name}')">
+        <div class="flex gap-12">
+          <div class="avatar avatar-sm">${initials(i.full_name)}</div>
+          <div><div style="font-size:13px;font-weight:600;">${i.full_name}</div><div style="font-size:12px;color:var(--text-muted);">${i.school||i.department||i.email}</div></div>
+        </div>
+        <span style="font-size:12px;color:var(--text-muted);">${fmtDate(i.internship_end)}</span>
+      </div>`).join('');
+  } catch(e){toast(e.message,'error');}
+}
+
+async function selectIntern(id, name) {
+  selectedInternId = id;
+  document.getElementById('eval-title').textContent = `Evaluate: ${name}`;
+  document.querySelectorAll('[id^="intern-row-"]').forEach(el=>el.style.background='');
+  document.getElementById(`intern-row-${id}`).style.background='var(--accent-glow)';
+
+  try {
+    const evals = await apiFetch(`/evaluations/${id}`);
+    const existing = evals[0];
+    document.getElementById('eval-form-wrap').innerHTML=`
+      ${existing?`<div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:12px;margin-bottom:18px;font-size:13px;color:#34d399;">✅ Evaluation already submitted. You can update it below.</div>`:''}
+      <form id="eval-form">
+        <div class="form-group">
+          <label class="form-label">Grade (%)</label>
+          <input type="number" class="form-control" id="e-grade" min="0" max="100" placeholder="0 - 100" value="${existing?.grade||''}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Performance Rating</label>
+          <select class="form-control" id="e-rating">
+            <option value="Excellent" ${existing?.performance_rating==='Excellent'?'selected':''}>⭐⭐⭐⭐ Excellent</option>
+            <option value="Good"      ${existing?.performance_rating==='Good'?'selected':''}>⭐⭐⭐ Good</option>
+            <option value="Average"   ${existing?.performance_rating==='Average'?'selected':''}>⭐⭐ Average</option>
+            <option value="Poor"      ${existing?.performance_rating==='Poor'?'selected':''}>⭐ Poor</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Comments & Feedback</label>
+          <textarea class="form-control" id="e-comments" rows="5" placeholder="Performance feedback, strengths, improvements...">${existing?.comments||''}</textarea>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <button type="submit" class="btn btn-primary" id="eval-btn">${existing?'Update':'Submit'} Evaluation</button>
+        </div>
+      </form>`;
+    document.getElementById('eval-form').addEventListener('submit', submitEval);
+  } catch(e){toast(e.message,'error');}
+}
+
+async function submitEval(e) {
+  e.preventDefault();
+  const btn=document.getElementById('eval-btn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    await apiFetch('/evaluations',{method:'POST',body:JSON.stringify({intern_id:selectedInternId,grade:document.getElementById('e-grade').value,performance_rating:document.getElementById('e-rating').value,comments:document.getElementById('e-comments').value})});
+    toast('Evaluation saved!','success');
+    const name=document.getElementById('eval-title').textContent.replace('Evaluate: ','');
+    await selectIntern(selectedInternId,name);
+  } catch(e){toast(e.message,'error');}
+  finally{const b=document.getElementById('eval-btn');if(b){b.disabled=false;b.textContent='Update Evaluation';}}
+}
+loadInterns();
+</script>
+</body>
+</html>

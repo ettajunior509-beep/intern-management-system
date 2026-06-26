@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Login – BIGDATA CENTER & AI | Intern Portal</title>
+<meta name="description" content="Sign in to the BIGDATA CENTER & AI Intern Management Portal. Manage your internship, tasks, attendance and evaluations.">
+<link rel="stylesheet" href="css/auth.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.bdc-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:20px 0
+}
+.bdc-stat{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;
+  padding:14px 16px;
+  text-align:center
+}
+.bdc-stat .num{
+  font-size:1.8rem;
+  font-weight:900;
+  color:#00d4ff;
+  line-height:1;
+  display:block
+}
+.bdc-stat .lbl{
+  font-size:11px;
+  color:rgba(255,255,255,0.5);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-top:4px
+}
+.bdc-depts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:14px 0
+}
+.bdc-dept{
+  background:rgba(99,102,241,0.15);
+  border:1px solid rgba(99,102,241,0.25);
+  border-radius:20px;
+  padding:4px 10px;
+  font-size:11px;
+  color:#a5b4fc
+}
+.bdc-steps{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:14px
+}
+.bdc-step{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  color:rgba(255,255,255,0.65)
+}
+.bdc-step-num{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#6366f1,#4f46e5);
+  display:grid;
+  place-items:center;
+  font-size:10px;
+  font-weight:800;
+  color:#fff;
+  flex-shrink:0
+}
+.bdc-contact{
+  margin-top:16px;
+  padding:12px 14px;
+  background:rgba(0,212,255,0.06);
+  border:1px solid rgba(0,212,255,0.15);
+  border-radius:10px;
+  font-size:12px;
+  color:rgba(255,255,255,0.55);
+  line-height:1.8
+}
+.bdc-contact strong{
+  color:#00d4ff
+}
+</style>
+</head>
+<body>
+<div class="auth-page">
+  <!-- Left Panel -->
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div>
+        <span style="margin-left:8px;font-size:18px;font-weight:800;color:#f0f2ff;">BIGDATA CENTER & AI</span>
+      </div>
+    </div>
+    <div class="auth-hero">
+      <h2>Welcome back <br>Sign in to continue</h2>
+      <p>Access your internship portal at BIGDATA CENTER & AI — Cameroon's leading tech hub for Big Data, AI, Infrastructure and Web Development.</p>
+    </div>
+
+    <div class="auth-note">Important: please review the full intern registry in the <strong>STAGE CHEZ BDC</strong> folder (2019–2026) before logging in.</div>
+
+    <div class="bdc-stats">
+      <div class="bdc-stat"><span class="num">55+</span><span class="lbl">Interns (2019–2026)</span></div>
+      <div class="bdc-stat"><span class="num">~70%</span><span class="lbl">Admission Rate</span></div>
+      <div class="bdc-stat"><span class="num">9+</span><span class="lbl">Partner Schools</span></div>
+      <div class="bdc-stat"><span class="num">8</span><span class="lbl">Active Departments</span></div>
+    </div>
+
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.4);margin-bottom:6px;">Available Departments</div>
+    <div class="bdc-depts">
+      <span class="bdc-dept">Software Dev</span>
+      <span class="bdc-dept">Big Data & AI</span>
+      <span class="bdc-dept">Infra & Networks</span>
+      <span class="bdc-dept">FabLab / UX-UI</span>
+      <span class="bdc-dept">IT Project Mgmt</span>
+      <span class="bdc-dept">Archives & Docs</span>
+      <span class="bdc-dept">Marketing Digital</span>
+      <span class="bdc-dept">Administration</span>
+    </div>
+
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.4);margin-top:14px;margin-bottom:6px;">Internship Process</div>
+    <div class="bdc-steps">
+      <div class="bdc-step"><div class="bdc-step-num">1</div>Application received within 24–48h</div>
+      <div class="bdc-step"><div class="bdc-step-num">2</div>Profile review & interview (in-person or remote)</div>
+      <div class="bdc-step"><div class="bdc-step-num">3</div>Integration week with daily challenges</div>
+      <div class="bdc-step"><div class="bdc-step-num">4</div>Active internship with daily reports</div>
+      <div class="bdc-step"><div class="bdc-step-num">5</div>Final report + Certificate delivery</div>
+    </div>
+
+    <div class="bdc-contact">
+    <strong>+237 656 286 990</strong>&nbsp;&nbsp;·&nbsp;&nbsp;<strong>bigdatacenterinfos@gmail.com</strong><br>
+      Partner schools: IME · ISETAG · IUT Douala · LEISAM · UDla
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="auth-right">
+    <div class="auth-form-wrap">      
+      <div class="auth-image" style="text-align:center;margin-bottom:24px;">
+      </div>      
+      <h1 class="auth-form-title">Sign In</h1>
+      <p class="auth-form-sub">Enter your credentials to access the portal.</p>
+
+      <div class="alert alert-error" id="error-alert"><span id="error-msg"></span></div>
+
+      <div class="pending-box" id="pending-box">
+        <div class="pending-icon">⏳</div>
+        <h3>Account Pending Approval</h3>
+        <p>Your registration is under review. An administrator will approve your account shortly.</p>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-wrap">
+            <input type="email" class="form-control" id="email" placeholder="your@email.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            <button type="button" class="toggle-pass" onclick="togglePass()">👁️</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth" id="login-btn">Sign In</button>
+      </form>
+
+      <div class="auth-divider">or</div>
+      <p class="auth-switch">Don't have an account? <a href="register.html">Register here</a></p>
+      <p class="auth-switch" style="margin-top:10px;"><a href="index.html">← Back to Home</a></p>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+<script>
+let currentRole = 'intern';
+const loginParams = new URLSearchParams(window.location.search);
+if (loginParams.get('role') === 'admin') {
+  currentRole = 'admin';
+}
+function setRole(role) {
+  currentRole = role;
+  document.getElementById('pending-box').classList.remove('show');
+  document.getElementById('error-alert').classList.remove('show');
+}
+function togglePass() {
+  const p = document.getElementById('password');
+  p.type = p.type === 'password' ? 'text' : 'password';
+}
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('login-btn');
+  const errAlert = document.getElementById('error-alert');
+  const pendingBox = document.getElementById('pending-box');
+  errAlert.classList.remove('show');
+  pendingBox.classList.remove('show');
+  btn.disabled = true;
+  btn.textContent = 'Signing in...';
+  try {
+    const data = await apiFetch(`/auth/${currentRole}/login`, {
+      method: 'POST',
+      body: JSON.stringify({ email: document.getElementById('email').value, password: document.getElementById('password').value })
+    });
+    Auth.save(data);
+    toast('Login successful! Redirecting...', 'success');
+    setTimeout(() => {
+      window.location.href = currentRole === 'admin' ? 'admin/dashboard.html' : 'intern/dashboard.html';
+    }, 800);
+  } catch (err) {
+    if (err.message.includes('pending')) {
+      pendingBox.classList.add('show');
+    } else {
+      document.getElementById('error-msg').textContent = err.message;
+      errAlert.classList.add('show');
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+  }
+});
+</script>
+</body>
+</html>

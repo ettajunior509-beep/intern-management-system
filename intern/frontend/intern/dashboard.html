@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Intern Dashboard – InternMS</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Intern Portal</div></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html"  class="nav-item active"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="tasks.html"      class="nav-item"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>My Tasks</a>
+      <a href="attendance.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <a href="calendar.html"   class="nav-item"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"    class="nav-item"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>My Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">I</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Intern</div><div class="sidebar-user-role">Intern</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">My Dashboard</div><div class="topbar-subtitle" id="greeting">Welcome back</div></div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" id="notif-toggle" title="Notifications"><span><i class="fa-solid fa-bell-concierge"></i></span><span class="topbar-badge" id="notif-count" style="display:none;">0</span></button>
+        <a href="profile.html"><button class="topbar-btn" title="Profile"><i class="fa-solid fa-circle-user"></i></button></a>
+      </div>
+    </div>
+
+    <!-- Notification dropdown -->
+    <div id="notif-panel" style="display:none;position:fixed;top:70px;right:24px;width:340px;background:#1a1b2e;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);z-index:200;max-height:420px;overflow-y:auto;">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-weight:700;font-size:14px;">Notifications</span>
+        <button onclick="markAllRead()" style="font-size:11px;color:var(--accent-light);background:none;border:none;cursor:pointer;">Mark all read</button>
+      </div>
+      <div id="notif-list"><p style="padding:20px;color:var(--text-muted);font-size:13px;text-align:center;">Loading...</p></div>
+    </div>
+
+    <div class="page-content">
+      <div class="page-header">
+        <h1>Hello, <span id="intern-name">Intern</span></h1>
+        <p id="today-date">Loading...</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid mb-24">
+        <div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-list"></i></div><div class="stat-info"><div class="stat-value" id="s-tasks">—</div><div class="stat-label">Assigned Tasks</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="fa-solid fa-stopwatch"></i></div><div class="stat-info"><div class="stat-value" id="s-pending">—</div><div class="stat-label">Pending Tasks</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div><div class="stat-info"><div class="stat-value" id="s-approved">—</div><div class="stat-label">Completed Tasks</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-calendar-check"></i></div><div class="stat-info"><div class="stat-value" id="s-attendance">—</div><div class="stat-label">Days Attended</div></div></div>
+      </div>
+
+      <!-- Internship Progress + Checkin -->
+      <div class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Internship Progress</div></div>
+          <div id="progress-section">
+            <div class="flex-between mb-16">
+              <div><div style="font-size:13px;color:var(--text-muted);">Start Date</div><div id="start-date" style="font-weight:600;">—</div></div>
+              <div style="text-align:center;"><div id="prog-pct" style="font-size:36px;font-weight:800;color:var(--accent-light);">0%</div><div style="font-size:11px;color:var(--text-muted);">Complete</div></div>
+              <div style="text-align:right;"><div style="font-size:13px;color:var(--text-muted);">End Date</div><div id="end-date" style="font-weight:600;">—</div></div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-bar" style="width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-dark));"></div></div>
+          </div>
+          <div style="margin-top:20px;">
+            <canvas id="taskChart" height="160"></canvas>
+          </div>
+        </div>
+
+        <!-- Check In -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Today's Attendance</div></div>
+          <div id="checkin-section" style="text-align:center;padding:20px 0;">
+            <div style="font-size:48px;margin-bottom:16px;" id="checkin-icon"></div>
+            <div id="checkin-time" style="font-size:32px;font-weight:800;color:var(--accent-light);" id="live-time">--:--</div>
+            <div id="checkin-status" style="margin-top:8px;color:var(--text-muted);font-size:14px;">Loading...</div>
+            <button class="btn btn-primary" id="checkin-btn" style="margin-top:20px;padding:12px 32px;font-size:15px;" onclick="checkIn()">🕐 Check In Now</button>
+          </div>
+          <div id="att-summary" style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px;">
+            <div class="flex gap-16" style="justify-content:center;">
+              <div style="text-align:center;"><div style="font-size:22px;font-weight:700;color:var(--success);" id="att-present">—</div><div style="font-size:11px;color:var(--text-muted);">Present</div></div>
+              <div style="text-align:center;"><div style="font-size:22px;font-weight:700;color:var(--warning);" id="att-late">—</div><div style="font-size:11px;color:var(--text-muted);">Late</div></div>
+              <div style="text-align:center;"><div style="font-size:22px;font-weight:700;color:var(--danger);" id="att-absent">—</div><div style="font-size:11px;color:var(--text-muted);">Absent</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Tasks + Evaluation -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Tasks</div><a href="tasks.html" class="btn btn-ghost btn-sm">View All</a></div>
+          <div id="recent-tasks"><p class="text-muted">Loading...</p></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">My Evaluation</div></div>
+          <div id="eval-section"><p class="text-muted">Loading...</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireIntern(); populateSidebarUser(); initLogout();
+const user = Auth.user();
+document.getElementById('intern-name').textContent = user?.full_name?.split(' ')[0]||'Intern';
+const now=new Date(), hr=now.getHours();
+document.getElementById('greeting').textContent = hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+document.getElementById('today-date').textContent = now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+// Live clock
+setInterval(()=>{ const t=new Date(); document.getElementById('checkin-time').textContent=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); },1000);
+
+// Notifications
+let notifOpen=false;
+document.getElementById('notif-toggle').addEventListener('click',()=>{
+  notifOpen=!notifOpen;
+  document.getElementById('notif-panel').style.display=notifOpen?'block':'none';
+  if(notifOpen) loadNotifications();
+});
+document.addEventListener('click',e=>{ if(!e.target.closest('#notif-toggle')&&!e.target.closest('#notif-panel')){notifOpen=false;document.getElementById('notif-panel').style.display='none';}});
+
+async function loadNotifications() {
+  try {
+    const notifs=await apiFetch('/notifications/my');
+    const unread=notifs.filter(n=>!n.is_read).length;
+    const badge=document.getElementById('notif-count');
+    if(unread){badge.style.display='grid';badge.textContent=unread;}else{badge.style.display='none';}
+    const el=document.getElementById('notif-list');
+    if(!notifs.length){el.innerHTML='<p style="padding:20px;color:var(--text-muted);font-size:13px;text-align:center;">No notifications</p>';return;}
+    const typeIcon={success:'✅',danger:'❌',warning:'⚠️',info:'ℹ️'};
+    el.innerHTML=notifs.map(n=>`
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);opacity:${n.is_read?0.6:1};cursor:pointer;" onclick="readNotif(${n.id},this)">
+        <div style="display:flex;gap:8px;"><span>${typeIcon[n.type]||'ℹ️'}</span><div><div style="font-size:13px;font-weight:600;">${n.title}</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${n.message}</div><div style="font-size:11px;color:var(--text-muted);margin-top:4px;">${fmtDateTime(n.created_at)}</div></div></div>
+      </div>`).join('');
+  } catch(e){}
+}
+async function readNotif(id,el){try{await apiFetch(`/notifications/${id}/read`,{method:'PATCH'});el.style.opacity='0.5';loadNotifications();}catch(e){}}
+async function markAllRead(){try{await apiFetch('/notifications/read-all',{method:'PATCH'});loadNotifications();}catch(e){}}
+
+async function loadDashboard() {
+  try {
+    // Intern profile
+    const intern=await apiFetch(`/interns/${user.id}`);
+    const prog=internshipProgress(intern.internship_start, intern.internship_end);
+    document.getElementById('start-date').textContent=fmtDate(intern.internship_start);
+    document.getElementById('end-date').textContent=fmtDate(intern.internship_end);
+    document.getElementById('prog-pct').textContent=prog+'%';
+    document.getElementById('prog-bar').style.width=prog+'%';
+
+    // Task stats
+    const ts=await apiFetch('/tasks/my/stats');
+    document.getElementById('s-tasks').textContent=ts.total;
+    document.getElementById('s-pending').textContent=ts.pending;
+    document.getElementById('s-approved').textContent=ts.approved;
+    new Chart(document.getElementById('taskChart'),{
+      type:'doughnut',
+      data:{labels:['Pending','Submitted','Approved'],datasets:[{data:[ts.pending,ts.submitted,ts.approved],backgroundColor:['#f59e0b','#3b82f6','#10b981'],borderWidth:0}]},
+      options:{plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}}},cutout:'60%'}
+    });
+
+    // Attendance
+    const att=await apiFetch('/attendance/my/summary');
+    document.getElementById('s-attendance').textContent=att.present+att.late;
+    document.getElementById('att-present').textContent=att.present;
+    document.getElementById('att-late').textContent=att.late;
+    document.getElementById('att-absent').textContent=att.absent;
+    if(att.todayRecord){
+      document.getElementById('checkin-icon').textContent='✅';
+      document.getElementById('checkin-status').innerHTML=`Checked in at <strong>${fmtTime(att.todayRecord.check_in_time)}</strong> — ${statusBadge(att.todayRecord.status)}`;
+      document.getElementById('checkin-btn').textContent='✅ Already Checked In';
+      document.getElementById('checkin-btn').disabled=true;
+      document.getElementById('checkin-btn').classList.remove('btn-primary');
+      document.getElementById('checkin-btn').classList.add('btn-ghost');
+    } else {
+      document.getElementById('checkin-status').textContent="You haven't checked in today yet.";
+    }
+
+    // Recent tasks
+    const tasks=await apiFetch('/tasks/my');
+    const tel=document.getElementById('recent-tasks');
+    if(!tasks.length){tel.innerHTML='<div class="empty-state"><p>No tasks assigned yet</p></div>';}
+    else { tel.innerHTML=`<div class="table-wrapper"><table><thead><tr><th>Task</th><th>Priority</th><th>Status</th><th>Deadline</th></tr></thead><tbody>${tasks.slice(0,4).map(t=>`<tr><td style="font-weight:600;font-size:13px;">${t.title}</td><td>${priorityBadge(t.priority)}</td><td>${statusBadge(t.status)}</td><td>${fmtDate(t.deadline)}</td></tr>`).join('')}</tbody></table></div>`; }
+
+    // Evaluation
+    const evals=await apiFetch(`/evaluations/${user.id}`);
+    const ev=evals[0];
+    const eel=document.getElementById('eval-section');
+    if(!ev){eel.innerHTML='<div class="empty-state"><p>No evaluation yet. Your grade will appear here after your internship is reviewed.</p></div>';}
+    else {
+      const rmap={Excellent:'success',Good:'info',Average:'warning',Poor:'danger'};
+      eel.innerHTML=`<div style="text-align:center;padding:20px 0;"><div style="font-size:56px;font-weight:900;color:var(--accent-light);">${ev.grade!=null?ev.grade+'%':'—'}</div><div style="margin-top:8px;"><span class="badge badge-${rmap[ev.performance_rating]||'secondary'}" style="font-size:14px;padding:6px 16px;">${ev.performance_rating}</span></div>${ev.comments?`<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:13px;color:var(--text-secondary);text-align:left;">"${ev.comments}"</div>`:''}<div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Evaluated by ${ev.admin_name} · ${fmtDate(ev.created_at)}</div></div>`;
+    }
+  } catch(e){toast(e.message,'error');}
+}
+
+async function checkIn() {
+  const btn=document.getElementById('checkin-btn'); btn.disabled=true; btn.textContent='Checking in...';
+  try {
+    const r=await apiFetch('/attendance/checkin',{method:'POST'});
+    toast(`✅ ${r.message}`,'success');
+    document.getElementById('checkin-icon').textContent='✅';
+    document.getElementById('checkin-status').innerHTML=`Checked in at <strong>${fmtTime(r.time)}</strong> — ${statusBadge(r.status)}`;
+    btn.textContent='✅ Checked In'; btn.classList.remove('btn-primary'); btn.classList.add('btn-ghost');
+  } catch(e){toast(e.message,'error');btn.disabled=false;btn.textContent='🕐 Check In Now';}
+}
+
+loadDashboard(); loadNotifications();
+</script>
+</body>
+</html>

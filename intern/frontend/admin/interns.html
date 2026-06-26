@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Manage Interns – InternMS</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Admin Portal</div></div></div>
+  <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item active" data-page="dashboard.html"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="interns.html"   class="nav-item" data-page="interns.html"><span class="nav-icon"><i class="fa-solid fa-users"></i></span>Interns</a>
+      <a href="tasks.html"     class="nav-item" data-page="tasks.html"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>Tasks</a>
+      <a href="attendance.html"class="nav-item" data-page="attendance.html"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <div class="nav-section-label">Tools</div>
+      <a href="calendar.html"  class="nav-item" data-page="calendar.html"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <a href="reports.html"   class="nav-item" data-page="reports.html"><span class="nav-icon"><i class="fa-regular fa-address-book"></i></span>Reports</a>
+      <a href="evaluations.html" class="nav-item" data-page="evaluations.html"><span class="nav-icon"><i class="fa-brands fa-galactic-senate"></i></span>Evaluations</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"   class="nav-item" data-page="profile.html"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">A</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">Interns</div><div class="topbar-subtitle">Manage all intern accounts</div></div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary" onclick="openAddModal()">+ Add Intern</button>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="filter-bar">
+        <div class="search-input"><span><i class="fa-solid fa-magnifying-glass-minus"></i></span><input type="text" id="search" placeholder="Search name, email, school..." oninput="filterInterns()"></div>
+        <select class="form-control" style="width:160px;" id="status-filter" onchange="filterInterns()">
+          <option value="">All Statuses</option>
+          <option value="approved">Approved</option>
+          <option value="pending">Pending</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="loadInterns()">↻ Refresh</button>
+      </div>
+      <div class="card">
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Intern</th><th>School</th><th>Department</th><th>Start</th><th>End</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="interns-body"><tr><td colspan="7" class="text-center text-muted" style="padding:40px;">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="intern-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="modal-title">Add Intern</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <form id="intern-form">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" id="f-name" required></div>
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="f-email" required></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-control" id="f-phone"></div>
+        <div class="form-group"><label class="form-label">School</label><input class="form-control" id="f-school"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Department</label><input class="form-control" id="f-dept"></div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Start Date</label><input type="date" class="form-control" id="f-start"></div>
+        <div class="form-group"><label class="form-label">End Date</label><input type="date" class="form-control" id="f-end"></div>
+      </div>
+      <div class="form-group" id="pw-group"><label class="form-label">Password</label><input type="password" class="form-control" id="f-password"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="form-btn">Add Intern</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- View Modal -->
+<div class="modal-overlay" id="view-modal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-header"><div class="modal-title">Intern Details</div><button class="modal-close" onclick="document.getElementById('view-modal').classList.remove('open')">✕</button></div>
+    <div id="view-content"></div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireAdmin(); populateSidebarUser(); initLogout();
+let allInterns = [], editId = null;
+
+async function loadInterns() {
+  try { allInterns = await apiFetch('/interns'); renderInterns(allInterns); }
+  catch(e) { toast(e.message,'error'); }
+}
+function renderInterns(list) {
+  const tb = document.getElementById('interns-body');
+  if (!list.length) { tb.innerHTML='<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">👥</div><p>No interns found</p></div></td></tr>'; return; }
+  tb.innerHTML = list.map(i=>`
+    <tr>
+      <td><div class="flex gap-12"><div class="avatar avatar-sm">${initials(i.full_name)}</div><div><div style="font-weight:600;font-size:13px;">${i.full_name}</div><div style="font-size:12px;color:var(--text-muted);">${i.email}</div></div></div></td>
+      <td>${i.school||'—'}</td><td>${i.department||'—'}</td>
+      <td>${fmtDate(i.internship_start)}</td><td>${fmtDate(i.internship_end)}</td>
+      <td>${statusBadge(i.status)}</td>
+      <td><div class="flex gap-8">
+        <button class="btn btn-ghost btn-sm" onclick="viewIntern(${i.id})"><i class="fa-solid fa-eye-slash"></i></button>
+        <button class="btn btn-ghost btn-sm" onclick="editIntern(${i.id})"><i class="fa-solid fa-pencil"></i></button>
+        ${i.status==='pending'?`<button class="btn btn-success btn-sm" onclick="approve(${i.id})">✓</button><button class="btn btn-danger btn-sm" onclick="reject(${i.id})">✗</button>`:''}
+        <button class="btn btn-danger btn-sm" onclick="deleteIntern(${i.id})"><i class="fa-solid fa-bucket"></i></button>
+      </div></td>
+    </tr>`).join('');
+}
+function filterInterns() {
+  const q=document.getElementById('search').value.toLowerCase(), s=document.getElementById('status-filter').value;
+  renderInterns(allInterns.filter(i=>(!s||i.status===s)&&(!q||i.full_name.toLowerCase().includes(q)||i.email.toLowerCase().includes(q)||(i.school||'').toLowerCase().includes(q))));
+}
+function openAddModal() { editId=null; document.getElementById('modal-title').textContent='Add Intern'; document.getElementById('form-btn').textContent='Add Intern'; document.getElementById('intern-form').reset(); document.getElementById('pw-group').style.display='block'; document.getElementById('intern-modal').classList.add('open'); }
+function editIntern(id) {
+  editId=id; const i=allInterns.find(x=>x.id===id); if(!i) return;
+  document.getElementById('modal-title').textContent='Edit Intern'; document.getElementById('form-btn').textContent='Save Changes';
+  document.getElementById('f-name').value=i.full_name||''; document.getElementById('f-email').value=i.email||'';
+  document.getElementById('f-phone').value=i.phone||''; document.getElementById('f-school').value=i.school||'';
+  document.getElementById('f-dept').value=i.department||''; document.getElementById('f-start').value=i.internship_start?.split('T')[0]||'';
+  document.getElementById('f-end').value=i.internship_end?.split('T')[0]||''; document.getElementById('pw-group').style.display='none';
+  document.getElementById('intern-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('intern-modal').classList.remove('open'); }
+
+document.getElementById('intern-form').addEventListener('submit',async e=>{
+  e.preventDefault(); const btn=document.getElementById('form-btn'); btn.disabled=true; btn.textContent='Saving...';
+  const body={full_name:document.getElementById('f-name').value,email:document.getElementById('f-email').value,phone:document.getElementById('f-phone').value,school:document.getElementById('f-school').value,department:document.getElementById('f-dept').value,internship_start:document.getElementById('f-start').value,internship_end:document.getElementById('f-end').value};
+  try {
+    if(editId){await apiFetch(`/interns/${editId}`,{method:'PUT',body:JSON.stringify(body)});toast('Updated','success');}
+    else{body.password=document.getElementById('f-password').value;await apiFetch('/interns',{method:'POST',body:JSON.stringify(body)});toast('Intern added','success');}
+    closeModal(); loadInterns();
+  } catch(e){toast(e.message,'error');}
+  finally{btn.disabled=false;btn.textContent=editId?'Save Changes':'Add Intern';}
+});
+
+async function viewIntern(id) {
+  try {
+    const i=await apiFetch(`/interns/${id}`); const prog=internshipProgress(i.internship_start,i.internship_end);
+    document.getElementById('view-content').innerHTML=`
+      <div class="flex gap-16 mb-24"><div class="avatar avatar-lg">${initials(i.full_name)}</div><div><h2 style="font-size:20px;font-weight:700;">${i.full_name}</h2><p style="color:var(--text-muted);font-size:13px;">${i.email}</p><div style="margin-top:8px;">${statusBadge(i.status)}</div></div></div>
+      <div class="form-grid">
+        <div><div class="form-label">Phone</div><p>${i.phone||'—'}</p></div>
+        <div><div class="form-label">School</div><p>${i.school||'—'}</p></div>
+        <div><div class="form-label">Department</div><p>${i.department||'—'}</p></div>
+        <div><div class="form-label">Registered</div><p>${fmtDate(i.created_at)}</p></div>
+        <div><div class="form-label">Start Date</div><p>${fmtDate(i.internship_start)}</p></div>
+        <div><div class="form-label">End Date</div><p>${fmtDate(i.internship_end)}</p></div>
+      </div>
+      <div style="margin-top:20px;"><div class="form-label">Internship Progress — ${prog}%</div><div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" style="width:${prog}%;background:linear-gradient(90deg,var(--accent),var(--accent-dark));"></div></div></div>`;
+    document.getElementById('view-modal').classList.add('open');
+  } catch(e){toast(e.message,'error');}
+}
+async function approve(id){try{await apiFetch(`/interns/${id}/status`,{method:'PATCH',body:JSON.stringify({status:'approved'})});toast('Approved!','success');loadInterns();}catch(e){toast(e.message,'error');}}
+async function reject(id){if(!confirm('Reject?'))return;try{await apiFetch(`/interns/${id}/status`,{method:'PATCH',body:JSON.stringify({status:'rejected'})});toast('Rejected','info');loadInterns();}catch(e){toast(e.message,'error');}}
+async function deleteIntern(id){if(!confirm('Delete this intern?'))return;try{await apiFetch(`/interns/${id}`,{method:'DELETE'});toast('Deleted','success');loadInterns();}catch(e){toast(e.message,'error');}}
+loadInterns();
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Attendance – InternMS Intern</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Intern Portal</div></div></div>
+     <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html"  class="nav-item active"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="tasks.html"      class="nav-item"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>My Tasks</a>
+      <a href="attendance.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <a href="calendar.html"   class="nav-item"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"    class="nav-item"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>My Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">I</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Intern</div><div class="sidebar-user-role">Intern</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">My Attendance</div><div class="topbar-subtitle">Track your check-in history</div></div>
+      </div>
+    </div>
+    <div class="page-content">
+
+      <!-- Check-in Hero -->
+      <div class="card mb-24" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));border-color:rgba(99,102,241,0.2);">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
+          <div>
+            <h2 style="font-size:22px;font-weight:700;margin-bottom:6px;">Today's Check-In</h2>
+            <div id="today-date-label" style="color:var(--text-muted);font-size:14px;"></div>
+            <div id="checkin-status-msg" style="margin-top:10px;font-size:15px;"></div>
+          </div>
+          <div style="text-align:center;">
+            <div id="live-clock" style="font-size:40px;font-weight:800;color:var(--accent-light);font-variant-numeric:tabular-nums;">--:--:--</div>
+            <button class="btn btn-primary" id="checkin-btn" style="margin-top:12px;padding:12px 28px;font-size:14px;" onclick="checkIn()">🕐 Check In Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid mb-24" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-calendar-days"></i></div><div class="stat-info"><div class="stat-value" id="s-total">—</div><div class="stat-label">Total Days</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div><div class="stat-info"><div class="stat-value" id="s-present">—</div><div class="stat-label">Present</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><div class="stat-value" id="s-late">—</div><div class="stat-label">Late</div></div></div>
+        <div class="stat-card"><div class="stat-icon red"><i class="fa-solid fa-times"></i></div><div class="stat-info"><div class="stat-value" id="s-absent">—</div><div class="stat-label">Absent</div></div></div>
+      </div>
+
+      <!-- Attendance Rate -->
+      <div class="card mb-24">
+        <div class="card-header"><div class="card-title">Attendance Rate</div><div id="att-rate-label" style="font-size:20px;font-weight:800;color:var(--accent-light);">—%</div></div>
+        <div class="progress-bar" style="height:10px;"><div class="progress-fill" id="att-rate-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+      </div>
+
+      <!-- History Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Attendance History</div>
+          <select class="form-control" style="width:140px;" id="status-filter" onchange="filterRecords()">
+            <option value="">All Status</option>
+            <option value="present">Present</option>
+            <option value="late">Late</option>
+            <option value="absent">Absent</option>
+          </select>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Date</th><th>Day</th><th>Check-in Time</th><th>Status</th></tr></thead>
+            <tbody id="att-body"><tr><td colspan="4" class="text-center text-muted" style="padding:40px;">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireIntern(); populateSidebarUser(); initLogout();
+let allRecords = [];
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+document.getElementById('today-date-label').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+setInterval(()=>{ document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); },1000);
+
+async function loadAttendance() {
+  try {
+    const [summary, records] = await Promise.all([apiFetch('/attendance/my/summary'), apiFetch('/attendance/my')]);
+    allRecords = records;
+    document.getElementById('s-total').textContent   = summary.total;
+    document.getElementById('s-present').textContent = summary.present;
+    document.getElementById('s-late').textContent    = summary.late;
+    document.getElementById('s-absent').textContent  = summary.absent;
+    const rate = summary.total ? Math.round(((summary.present+summary.late)/summary.total)*100) : 0;
+    document.getElementById('att-rate-label').textContent = rate+'%';
+    document.getElementById('att-rate-bar').style.width = rate+'%';
+
+    if(summary.todayRecord) {
+      const r=summary.todayRecord;
+      document.getElementById('checkin-status-msg').innerHTML=`✅ Checked in at <strong>${fmtTime(r.check_in_time)}</strong> — ${statusBadge(r.status)}`;
+      const btn=document.getElementById('checkin-btn'); btn.textContent='✅ Already Checked In'; btn.disabled=true; btn.classList.remove('btn-primary'); btn.classList.add('btn-ghost');
+    } else {
+      document.getElementById('checkin-status-msg').textContent='You have not checked in today yet.';
+    }
+    renderRecords(allRecords);
+  } catch(e){toast(e.message,'error');}
+}
+
+function renderRecords(list) {
+  const tb=document.getElementById('att-body');
+  if(!list.length){tb.innerHTML='<tr><td colspan="4"><div class="empty-state"><p>No attendance records found</p></div></td></tr>';return;}
+  tb.innerHTML=list.map(r=>`
+    <tr>
+      <td><strong>${fmtDate(r.date)}</strong></td>
+      <td style="color:var(--text-muted);">${DAYS[new Date(r.date).getDay()]}</td>
+      <td>${r.check_in_time?fmtTime(r.check_in_time):'—'}</td>
+      <td>${statusBadge(r.status)}</td>
+    </tr>`).join('');
+}
+
+function filterRecords() {
+  const s=document.getElementById('status-filter').value;
+  renderRecords(allRecords.filter(r=>!s||r.status===s));
+}
+
+async function checkIn() {
+  const btn=document.getElementById('checkin-btn'); btn.disabled=true; btn.textContent='Checking in...';
+  try {
+    const r=await apiFetch('/attendance/checkin',{method:'POST'});
+    toast(`✅ ${r.message}`,'success');
+    document.getElementById('checkin-status-msg').innerHTML=`✅ Checked in at <strong>${fmtTime(r.time)}</strong> — ${statusBadge(r.status)}`;
+    btn.textContent='✅ Checked In'; btn.classList.remove('btn-primary'); btn.classList.add('btn-ghost');
+    loadAttendance();
+  } catch(e){toast(e.message,'error');btn.disabled=false;btn.textContent='🕐 Check In Now';}
+}
+loadAttendance();
+</script>
+</body>
+</html>

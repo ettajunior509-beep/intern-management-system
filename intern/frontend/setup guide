@@ -1,0 +1,115 @@
+# 🎓 InternMS – Build Complete & Running!
+
+> **Server is live at: http://localhost:5000**
+
+## Screenshots
+
+````carousel
+![Landing Page](C:\Users\GATUZO JUNIOR PC\.gemini\antigravity\brain\4ee0de0e-a97b-49c7-a410-d0b27a760e3c\landing_page_1779117107113.png)
+<!-- slide -->
+![Login Page](C:\Users\GATUZO JUNIOR PC\.gemini\antigravity\brain\4ee0de0e-a97b-49c7-a410-d0b27a760e3c\login_page_1779117162711.png)
+<!-- slide -->
+![Register Page](C:\Users\GATUZO JUNIOR PC\.gemini\antigravity\brain\4ee0de0e-a97b-49c7-a410-d0b27a760e3c\register_page_1779117259877.png)
+````
+
+---
+
+## ✅ What Was Built
+
+| Area | Files Created |
+|---|---|
+| **Backend** | `server.js`, `db.js`, `schema.sql`, `auth.js` middleware, 7 route files |
+| **Auth Pages** | `login.html`, `register.html`, `index.html` (landing) |
+| **Admin Portal** | `dashboard`, `interns`, `tasks`, `attendance`, `calendar`, `reports`, `evaluations`, `profile` |
+| **Intern Portal** | `dashboard`, `tasks`, `attendance`, `calendar`, `profile` |
+| **Shared** | `style.css` (dark design system), `auth.css`, `app.js` (utilities) |
+
+---
+
+## 🔴 ONE REMAINING STEP – Set Up MySQL
+
+The server is running but needs a database connection. Follow these steps:
+
+### Step 1 – Open phpMyAdmin or MySQL Workbench
+Go to `http://localhost/phpmyadmin` (if using XAMPP/WAMP).
+
+### Step 2 – Run the Schema SQL
+1. Click **"New"** in the left panel to create a database, OR
+2. Click the **SQL** tab and paste the contents of:
+   ```
+   backend/config/schema.sql
+   ```
+3. Click **Go** — this creates the `intern_management` database with all 6 tables.
+
+### Step 3 – Update Your Password in `.env`
+Open `backend/.env` and update `DB_PASSWORD` to match your MySQL password:
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=         ← put your MySQL password here (or leave blank for XAMPP default)
+DB_NAME=intern_management
+JWT_SECRET=intern_mgmt_super_secret_key_2026
+PORT=5000
+```
+
+### Step 4 – Restart the Server
+In the terminal:
+```
+cmd /c npm start
+```
+You should now see:
+```
+🚀 Intern Management Server running on http://localhost:5000
+✅ MySQL connected successfully
+```
+
+### Step 5 – Register Your First Admin
+Go to → **http://localhost:5000/register.html?role=admin**  
+Fill in the admin form and submit.  
+Then sign in at **http://localhost:5000/login.html?role=admin**.  
+After login, open **http://localhost:5000/admin/dashboard.html** to access the admin dashboard.
+
+---
+
+## 🗂️ Full Feature List
+
+### Admin Features
+- 📊 Dashboard with stats cards + doughnut chart
+- ✅ Approve / Reject intern registrations  
+- 👥 Add, edit, delete, view interns
+- 📝 Assign tasks with priority & deadlines
+- 📋 Review submissions (approve/reject + feedback)
+- 📋 Attendance monitoring with per-intern summary
+- 🗓️ Interactive calendar with event management
+- 📈 Reports with charts, top performers, per-intern report
+- ⭐ Grade interns (Excellent / Good / Average / Poor + comments)
+- 👤 Admin profile with avatar upload & password change
+
+### Intern Features
+- 📊 Dashboard with progress bar, live check-in clock
+- 🔔 Real-time notifications panel
+- 📝 View & submit tasks as card grid
+- 📋 Daily attendance check-in (auto late detection)
+- 🗓️ Calendar showing events + attendance overlay
+- ⭐ Final grade/evaluation display
+- 👤 Profile with avatar upload & password change
+
+---
+
+## 🌐 All URLs
+
+| Page | URL |
+|---|---|
+| Home | http://localhost:5000 |
+| Login | http://localhost:5000/login.html |
+| Register | http://localhost:5000/register.html |
+| Admin Dashboard | http://localhost:5000/admin/dashboard.html |
+| Admin Interns | http://localhost:5000/admin/interns.html |
+| Admin Tasks | http://localhost:5000/admin/tasks.html |
+| Admin Attendance | http://localhost:5000/admin/attendance.html |
+| Admin Calendar | http://localhost:5000/admin/calendar.html |
+| Admin Reports | http://localhost:5000/admin/reports.html |
+| Admin Evaluations | http://localhost:5000/admin/evaluations.html |
+| Intern Dashboard | http://localhost:5000/intern/dashboard.html |
+| Intern Tasks | http://localhost:5000/intern/tasks.html |
+| Intern Attendance | http://localhost:5000/intern/attendance.html |

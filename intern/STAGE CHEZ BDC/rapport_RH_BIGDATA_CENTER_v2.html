@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport RH – BIGDATA CENTER & AI | 2019–2026 v2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080d14;--surface:#0f1923;--card:#162030;--card2:#1c2a3d;--border:#1e3050;--accent:#00d4ff;--accent2:#ff6b35;--accent3:#39e890;--accent4:#ffd166;--accent5:#c77dff;--text:#dde6f0;--muted:#5e7a96;--danger:#ff4060;--success:#39e890;--warning:#ffb830}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;min-height:100vh}
+
+/* ── COVER ── */
+.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden;background:radial-gradient(ellipse at 15% 60%,#071a35 0%,transparent 55%),radial-gradient(ellipse at 85% 20%,#0a1f3a 0%,transparent 55%),var(--bg)}
+.cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(0,212,255,.03) 59px,rgba(0,212,255,.03) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(0,212,255,.03) 59px,rgba(0,212,255,.03) 60px);pointer-events:none}
+.cover-badge{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.2em;color:var(--accent);border:1px solid rgba(0,212,255,.35);padding:.4rem 1.2rem;margin-bottom:2rem;text-transform:uppercase;position:relative;z-index:1}
+.cover h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1;margin-bottom:.5rem;position:relative;z-index:1}
+.cover h1 span{color:var(--accent)}
+.cover-sub{font-family:'IBM Plex Mono',monospace;font-size:.9rem;color:var(--muted);margin-bottom:2.5rem;letter-spacing:.05em;z-index:1;position:relative}
+.cover-stats{display:flex;gap:2.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2rem;position:relative;z-index:1}
+.cstat .v{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;color:var(--accent);display:block;line-height:1}
+.cstat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.cover-line{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:0 auto 1.5rem;position:relative;z-index:1}
+.cover-desc{font-size:.9rem;color:var(--muted);max-width:600px;position:relative;z-index:1;line-height:1.7}
+.cover-date{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted);position:absolute;bottom:2rem;z-index:1}
+.confidential{background:linear-gradient(90deg,#c0392b,var(--accent2));color:#fff;text-align:center;padding:.4rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase}
+
+/* ── NAV ── */
+.nav{background:rgba(10,15,22,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 2rem;position:sticky;top:0;z-index:200;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.nav-lbl{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:.15em;margin-right:.5rem}
+.nav a{font-size:.78rem;color:var(--muted);text-decoration:none;padding:.25rem .6rem;border-radius:4px;transition:all .2s;white-space:nowrap}
+.nav a:hover{background:var(--card);color:var(--text)}
+
+/* ── LAYOUT ── */
+.section{max-width:1140px;margin:0 auto;padding:4rem 2rem;border-bottom:1px solid var(--border)}
+.sec-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:.4rem}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;margin-bottom:.5rem;line-height:1.1}
+.sec-title em{color:var(--accent2);font-style:normal}
+.sec-intro{color:var(--muted);font-size:.9rem;max-width:640px;margin-bottom:2.5rem;border-left:3px solid var(--accent);padding-left:1rem;line-height:1.7}
+
+/* ── KPI ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.25rem;margin-bottom:3rem}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,var(--accent))}
+.kpi .n{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--kc,var(--accent));line-height:1;display:block}
+.kpi .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.4rem}
+.kpi .d{font-family:'IBM Plex Mono',monospace;font-size:.7rem;margin-top:.4rem}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;margin-bottom:2rem}
+table.dt{width:100%;border-collapse:collapse;font-size:.83rem;min-width:600px}
+table.dt th{font-family:'IBM Plex Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);background:var(--card);padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
+table.dt td{padding:.75rem 1rem;border-bottom:1px solid rgba(30,48,80,.4);vertical-align:top}
+table.dt tr:hover td{background:rgba(0,212,255,.03)}
+
+/* ── BADGES ── */
+.b{display:inline-block;padding:.18rem .55rem;border-radius:4px;font-size:.65rem;font-family:'IBM Plex Mono',monospace;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.b-ok{background:rgba(57,232,144,.12);color:var(--success);border:1px solid rgba(57,232,144,.25)}
+.b-ng{background:rgba(255,64,96,.12);color:var(--danger);border:1px solid rgba(255,64,96,.25)}
+.b-wa{background:rgba(255,184,48,.12);color:var(--warning);border:1px solid rgba(255,184,48,.25)}
+.b-in{background:rgba(0,212,255,.12);color:var(--accent);border:1px solid rgba(0,212,255,.25)}
+.b-mu{background:rgba(94,122,150,.12);color:var(--muted);border:1px solid rgba(94,122,150,.25)}
+.b-pu{background:rgba(199,125,255,.12);color:var(--accent5);border:1px solid rgba(199,125,255,.25)}
+
+/* ── ALERT ── */
+.alert{border-left:4px solid;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin-bottom:1.25rem;font-size:.85rem;line-height:1.6}
+.a-wa{border-color:var(--warning);background:rgba(255,184,48,.07)}
+.a-in{border-color:var(--accent);background:rgba(0,212,255,.07)}
+.a-ok{border-color:var(--success);background:rgba(57,232,144,.07)}
+.a-ng{border-color:var(--danger);background:rgba(255,64,96,.07)}
+
+/* ── STAGIAIRE CARDS ── */
+#stagiaires-app .filters{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.5rem}
+#stagiaires-app .f-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:.35rem .85rem;border-radius:20px;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+#stagiaires-app .f-btn:hover,#stagiaires-app .f-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600}
+.search-bar{width:100%;max-width:400px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;color:var(--text);font-size:.85rem;font-family:'DM Sans',sans-serif;margin-bottom:1.5rem;outline:none}
+.search-bar:focus{border-color:var(--accent)}
+.stag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.25rem}
+.stag-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s;cursor:pointer}
+.stag-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.stag-head{padding:1.25rem;display:flex;gap:1rem;align-items:flex-start;border-bottom:1px solid var(--border)}
+.stag-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#fff;flex-shrink:0;background:var(--av-bg,var(--card2))}
+.stag-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;line-height:1.2}
+.stag-role{font-size:.75rem;color:var(--accent);margin-top:.2rem;font-family:'IBM Plex Mono',monospace}
+.stag-body{padding:1rem 1.25rem}
+.stag-meta{font-size:.75rem;color:var(--muted);display:flex;flex-direction:column;gap:.25rem;margin-bottom:.75rem}
+.stag-meta span::before{content:'▸ ';color:var(--accent);font-size:.65rem}
+.stag-works{font-size:.75rem;color:var(--text);line-height:1.5;border-top:1px solid var(--border);padding-top:.75rem;margin-top:.5rem}
+.stag-works-title{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--accent2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.stag-count{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:1rem;padding-top:.5rem;border-top:1px solid var(--border)}
+
+/* ── CHART CONTAINERS ── */
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:1.5rem}
+.chart-ttl{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.25rem}
+.chart-wrap{position:relative;height:280px}
+.bar-chart-css{display:flex;flex-direction:column;gap:.65rem}
+.bar-row{display:flex;align-items:center;gap:.85rem}
+.bar-lbl{width:200px;font-size:.78rem;color:var(--text);text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:26px;background:var(--surface);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:500;color:rgba(255,255,255,.9);min-width:40px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem}
+@media(max-width:680px){.two-col{grid-template-columns:1fr}}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:2.5rem;margin-bottom:2rem}
+.timeline::before{content:'';position:absolute;left:.7rem;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--accent2),var(--accent3))}
+.tl-item{position:relative;margin-bottom:1.75rem}
+.tl-item::before{content:'';position:absolute;left:-1.8rem;top:.4rem;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 0 8px var(--accent)}
+.tl-date{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--accent);letter-spacing:.1em;margin-bottom:.2rem}
+.tl-event{font-size:.9rem;font-weight:600;margin-bottom:.2rem}
+.tl-detail{font-size:.8rem;color:var(--muted);line-height:1.5}
+
+/* ── SKILLS ── */
+.skill-bars{display:flex;flex-direction:column;gap:.6rem}
+.sk-row{display:flex;align-items:center;gap:.85rem}
+.sk-name{font-size:.8rem;width:180px;flex-shrink:0}
+.sk-track{flex:1;height:8px;background:var(--surface);border-radius:4px;overflow:hidden}
+.sk-fill{height:100%;border-radius:4px}
+.sk-val{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);width:35px;text-align:right}
+
+/* ── RECO ── */
+.reco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem;margin-bottom:2rem}
+.reco{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+.reco-icon{font-size:1.4rem;margin-bottom:.5rem}
+.reco-title{font-weight:600;font-size:.9rem;margin-bottom:.4rem}
+.reco-body{font-size:.78rem;color:var(--muted);line-height:1.55}
+
+/* ── FOOTER ── */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted)}
+footer strong{color:var(--accent)}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(8,13,20,.85);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;padding:2rem;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:.3rem .7rem;cursor:pointer;font-size:.8rem;transition:all .2s}
+.modal-close:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.25rem}
+.modal-dept{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--accent);margin-bottom:1.25rem}
+.modal-section{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.modal-section h3{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--accent2);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem}
+.modal-info{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem}
+.mi{font-size:.8rem;color:var(--muted)}
+.mi strong{color:var(--text)}
+.works-list{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.works-list li{font-size:.82rem;padding:.5rem .75rem;background:var(--surface);border-radius:6px;border-left:3px solid var(--accent2);line-height:1.4}
+.works-list li .w-title{font-weight:600;color:var(--text)}
+.works-list li .w-desc{color:var(--muted);font-size:.78rem}
+</style>
+</head>
+<body>
+
+<div class="confidential">⚠ Document Confidentiel – BIGDATA CENTER SARLU – Usage Institutionnel Restreint ⚠</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-badge">Rapport Institutionnel RH · Édition 2026</div>
+  <h1>BIGDATA<br>CENTER <span>&amp; AI</span></h1>
+  <p style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--muted);margin-bottom:1rem;">RAPPORT COMPLET DE GESTION DES RESSOURCES HUMAINES</p>
+  <div class="cover-line"></div>
+  <p class="cover-sub">Période 2019–2026 · Akwa-Douala, Cameroun · +237 656 286 990</p>
+  <div class="cover-stats">
+    <div class="cstat"><span class="v">55+</span><span class="l">Stagiaires identifiés</span></div>
+    <div class="cstat"><span class="v">9+</span><span class="l">Écoles partenaires</span></div>
+    <div class="cstat"><span class="v">8</span><span class="l">Départements actifs</span></div>
+    <div class="cstat"><span class="v">4</span><span class="l">Promotions documentées</span></div>
+  </div>
+  <p class="cover-desc">Dossier établi à partir de l'analyse exhaustive des emails 2019–2026. Destiné aux établissements partenaires, au Ministère de l'Emploi et aux partenaires financiers de BIGDATA CENTER.</p>
+  <p class="cover-date">Édité le 10 mai 2026 · bigdatacenterinfos@gmail.com</p>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <span class="nav-lbl">§</span>
+  <a href="#s1">Vue d'ensemble</a>
+  <a href="#s2">Processus RH</a>
+  <a href="#s3">Registre complet</a>
+  <a href="#s4">Travaux réalisés</a>
+  <a href="#s5">Écoles partenaires</a>
+  <a href="#s6">Compétences</a>
+  <a href="#s7">Projets &amp; Clients</a>
+  <a href="#s8">Indicateurs</a>
+  <a href="#s9">Recommandations</a>
+</nav>
+
+<!-- ===== S1 : VUE D'ENSEMBLE ===== -->
+<div class="section" id="s1">
+  <div class="sec-label">Section 01</div>
+  <h2 class="sec-title">Vue d'ensemble<br><em>RH 2019–2026</em></h2>
+  <p class="sec-intro">Synthèse consolidée de toute l'activité RH de BIGDATA CENTER, couvrant quatre promotions de stagiaires identifiées dans les archives email depuis 2019.</p>
+  <div class="kpi-grid">
+    <div class="kpi" style="--kc:var(--accent)"><span class="n">55+</span><div class="l">Stagiaires identifiés (toutes promotions)</div><div class="d" style="color:var(--success)">↑ Données exhaustives extraites des emails</div></div>
+    <div class="kpi" style="--kc:var(--accent3)"><span class="n">~70%</span><div class="l">Taux d'admission global</div><div class="d" style="color:var(--success)">↑ Supérieur à la moyenne sectorielle (~55%)</div></div>
+    <div class="kpi" style="--kc:var(--accent2)"><span class="n">20+</span><div class="l">Entretiens documentés</div><div class="d" style="color:var(--accent)">Présentiel + WhatsApp + Zoom</div></div>
+    <div class="kpi" style="--kc:var(--warning)"><span class="n">4</span><div class="l">Promotions / Vagues documentées</div><div class="d" style="color:var(--accent)">2024 · Déc.2025 · Janv.2026 · Mai 2026</div></div>
+    <div class="kpi" style="--kc:var(--accent4)"><span class="n">20+</span><div class="l">Attestations délivrées</div><div class="d" style="color:var(--success)">↑ Processus bien formalisé</div></div>
+    <div class="kpi" style="--kc:var(--danger)"><span class="n">9+</span><div class="l">Établissements partenaires</div><div class="d" style="color:var(--accent)">IUT · IME · ISETAG · LEISAM · UDla…</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-box">
+      <div class="chart-ttl">Évolution annuelle des candidatures reçues</div>
+      <div class="chart-wrap"><canvas id="chartEvol"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-ttl">Répartition par résultat de candidature</div>
+      <div class="chart-wrap"><canvas id="chartIssue"></canvas></div>
+    </div>
+  </div>
+
+  <div class="alert a-in">
+    <strong>Note méthodologique :</strong> Ce rapport est établi à partir de l'analyse exhaustive des fils de discussion de bigdatacenterinfos@gmail.com entre 2019 et mai 2026. Les données antérieures à 2024 sont estimées ; celles de 2024–2026 sont documentées précisément. Les noms sans établissement identifié sont indiqués «École : N.D.» (non déterminée dans les emails).
+  </div>
+</div>
+
+<!-- ===== S2 : PROCESSUS ===== -->
+<div class="section" id="s2">
+  <div class="sec-label">Section 02</div>
+  <h2 class="sec-title">Processus<br><em>de Recrutement &amp; Suivi</em></h2>
+  <p class="sec-intro">Cycle complet observé chez BIGDATA CENTER, de la réception de candidature jusqu'à la délivrance de l'attestation et la gestion des contentieux.</p>
+
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-date">ÉTAPE 1 – RÉCEPTION</div><div class="tl-event">Réception des candidatures (CV + LM)</div><div class="tl-detail">Via email direct ou transmission par les établissements partenaires (ISETAG batch, IUT, IME). Accusé de réception systématique sous 24–48h.</div></div>
+    <div class="tl-item"><div class="tl-date">ÉTAPE 2 – PRÉSÉLECTION</div><div class="tl-event">Analyse des dossiers et tri par département</div><div class="tl-detail">Évaluation du profil technique, du niveau académique et de la motivation. Convocation à entretien avec plage horaire précise.</div></div>
+    <div class="tl-item"><div class="tl-date">ÉTAPE 3 – ENTRETIEN</div><div class="tl-event">Entretien en présentiel ou à distance (WhatsApp)</div><div class="tl-detail">Convocations individuelles ou en batch. Mode WhatsApp pour les candidats éloignés. Créneau flexible selon contraintes académiques. Certains candidats envoient un rapport ou mini-projet comme test d'évaluation (ex. Astride KENMOE avec Tableau Software).</div></div>
+    <div class="tl-item"><div class="tl-date">ÉTAPE 4 – INTÉGRATION</div><div class="tl-event">Semaine d'intégration avec challenges journaliers</div><div class="tl-detail">Un planning officiel est envoyé à tous les stagiaires retenus, avec des «challenges journaliers» pour évaluer en conditions réelles. Une phase de sélection finale est opérée à l'issue de cette semaine.</div></div>
+    <div class="tl-item"><div class="tl-date">ÉTAPE 5 – SUIVI ACTIF</div><div class="tl-event">Rapports journaliers obligatoires</div><div class="tl-detail">Chaque stagiaire soumet un rapport journalier par email. La direction répond avec des retours (corrections, encouragements, recentrage sur les tâches prioritaires). Les encadrants (Fotso Audrey, Jean Mark Shey, Grace Maptue…) supervisent au quotidien.</div></div>
+    <div class="tl-item"><div class="tl-date">ÉTAPE 6 – FIN DE STAGE</div><div class="tl-event">Rapport final + Attestation + Restitution</div><div class="tl-detail">Le rapport de stage est relu et corrigé par la direction avant impression. L'attestation est délivrée après : (1) dépôt du rapport physique relié, (2) restitution des données/codes/accès, (3) validation RH. Les attestations erronées sont corrigées à la demande.</div></div>
+    <div class="tl-item" style="--accent:#ff4060"><div class="tl-date">INCIDENTS &amp; SANCTIONS</div><div class="tl-event">Interruptions, mises en demeure, retards</div><div class="tl-detail">Des interruptions immédiates sont prononcées (ex. ATOUNKEP Neyou Wilfried, 8 mai 2026). Des mises en demeure collectives ont été envoyées pour non-dépôt de rapport et non-retrait d'attestation. Des prorogations de délais sont accordées sur demande motivée.</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-box">
+      <div class="chart-ttl">Délais observés (moyennes)</div>
+      <div class="bar-chart-css">
+        <div class="bar-row"><div class="bar-lbl">Accusé de réception</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:var(--accent)">24–48h</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Convocation entretien</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--accent3)">3–7 jours</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Notification admission</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--accent2)">1–5 jours</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Attestation disponible</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--warning)">2–3 sem.</div></div></div>
+      </div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-ttl">Mentions observées (promotions documentées)</div>
+      <div class="bar-chart-css">
+        <div class="bar-row"><div class="bar-lbl">Très bien</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#39e890">20%</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Assez bien</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:#00d4ff">45%</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Bien</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#ffd166">20%</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Passable</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#ff6b35">15%</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== S3 : REGISTRE COMPLET ===== -->
+<div class="section" id="s3">
+  <div class="sec-label">Section 03</div>
+  <h2 class="sec-title">Registre Exhaustif<br><em>des Stagiaires 2019–2026</em></h2>
+  <p class="sec-intro">Base de données complète de tous les stagiaires identifiés dans les archives email. Filtrez par promotion, département ou école. Cliquez sur une fiche pour voir le détail complet et les travaux réalisés.</p>
+
+  <div id="stagiaires-app">
+    <input class="search-bar" type="text" id="searchInp" placeholder="Rechercher un nom, email, école, spécialité…">
+    <div class="filters" id="filterBtns">
+      <button class="f-btn active" data-f="all">Tous (55+)</button>
+      <button class="f-btn" data-f="dec25">Promo Déc. 2025</button>
+      <button class="f-btn" data-f="jan26">Promo Jan.–Fév. 2026</button>
+      <button class="f-btn" data-f="avr26">Promo Avr.–Mai 2026</button>
+      <button class="f-btn" data-f="2024">Promo 2024–2025</button>
+      <button class="f-btn" data-f="dev">Développement</button>
+      <button class="f-btn" data-f="infra">Infra &amp; Réseaux</button>
+      <button class="f-btn" data-f="data">Big Data &amp; AI</button>
+      <button class="f-btn" data-f="ime">IME School</button>
+      <button class="f-btn" data-f="isetag">ISETAG</button>
+      <button class="f-btn" data-f="iut">IUT Douala</button>
+      <button class="f-btn" data-f="leisam">LEISAM</button>
+      <button class="f-btn" data-f="udla">Univ. Douala</button>
+    </div>
+    <div id="stag-count-lbl" class="stag-count"></div>
+    <div class="stag-grid" id="stagGrid"></div>
+  </div>
+</div>
+
+<!-- ===== S4 : TRAVAUX ===== -->
+<div class="section" id="s4">
+  <div class="sec-label">Section 04</div>
+  <h2 class="sec-title">Travaux Réalisés<br><em>par les Stagiaires</em></h2>
+  <p class="sec-intro">Base de connaissances documentaire constituée à partir des rapports, projets et livrables produits par les stagiaires pendant leur séjour à BIGDATA CENTER.</p>
+
+  <div class="alert a-ok">
+    <strong>Note :</strong> Les pièces jointes et fichiers sont stockés dans les emails Gmail. Ce tableau recense les travaux identifiés par leur titre dans les sujets d'emails, les corps de messages et les rapports transmis.
+  </div>
+
+  <div class="tbl-wrap">
+  <table class="dt">
+    <thead><tr><th>Stagiaire</th><th>Titre / Thème de travail</th><th>Type</th><th>Dept.</th><th>Période</th><th>Appréciation direction</th></tr></thead>
+    <tbody>
+      <tr><td><strong>KENMOE Astride</strong></td><td>Rapport sur Tableau Software · Rapport de stage académique avec chatbot IA intégré</td><td><span class="b b-pu">Rapport + Prototype</span></td><td>Big Data / BI</td><td>Déc. 2025 – Fév. 2026</td><td><span class="b b-ok">Excellent</span> – Rapport transmis à Ing. KAPTUE pour exploitation</td></tr>
+      <tr><td><strong>NGON Marie</strong></td><td>Version intermédiaire (Alpha) de projet de fin d'études · Rapports journaliers Déc. 2025</td><td><span class="b b-in">Mémoire + Journal</span></td><td>Big Data</td><td>Déc. 2025 – Fév. 2026</td><td><span class="b b-wa">Bon</span> – Demande de prorogation du délai accordée</td></tr>
+      <tr><td><strong>TOUSSE MALONTSOB Manuela</strong></td><td>Bilans journaliers 1–4 · Rapport_Stage_MANUELA (LEISAM) · Page de garde rapport</td><td><span class="b b-in">Rapport de stage</span></td><td>Archives &amp; Documentation (BIGDATA ARKIV)</td><td>Déc. 2025 – Fév. 2026</td><td><span class="b b-ok">Assez Bien</span> – Mention officielle IME</td></tr>
+      <tr><td><strong>TIENTCHEU Océane</strong></td><td>Rapport de stage (LEISAM) · Compte-rendu de réunion matinale du 02/03/2026 · Fichier stagiaires ayant remis un rapport</td><td><span class="b b-pu">Rapport + CR réunion + Admin</span></td><td>Gestion / Administration</td><td>Déc. 2025 – Mars 2026</td><td><span class="b b-wa">Assez Bien</span> – A demandé permission d'occupation des locaux post-stage</td></tr>
+      <tr><td><strong>KOUMO Emilienne</strong></td><td>Rapports journaliers · Rapport de stage (version corrigée x3) · Rapport stage soumis</td><td><span class="b b-in">Rapport de stage</span></td><td>Développement logiciel</td><td>Déc. 2025 – Mars 2026</td><td><span class="b b-wa">Bien</span> – Retards signalés; rapport finalement soumis et corrigé</td></tr>
+      <tr><td><strong>NITCHEU NGUEMALEU Blerio</strong></td><td>Rapports journaliers Fév. 2026 · Rapport de stage (version soumise, corrigée)</td><td><span class="b b-in">Rapport de stage</span></td><td>Développement / FabLab</td><td>Déc. 2025 – Mars 2026</td><td><span class="b b-wa">Bien</span> – Corrections notées par direction</td></tr>
+      <tr><td><strong>TOTOKO YEMI Pierre Lionel</strong></td><td>Rapport de stage – Département Infrastructures &amp; Réseaux · Rap de stage soumis</td><td><span class="b b-in">Rapport de stage</span></td><td>Infra. &amp; Réseaux</td><td>Jan. – Fév. 2026</td><td><span class="b b-wa">Passable</span> – Mention officielle IME</td></tr>
+      <tr><td><strong>SIMO KAMEGNI Thérèse Veranne</strong></td><td>Stage Infrastructures &amp; Réseaux</td><td><span class="b b-in">Stage académique</span></td><td>Infra. &amp; Réseaux</td><td>Jan. – Fév. 2026</td><td><span class="b b-ok">Assez Bien</span> – Mention officielle IME</td></tr>
+      <tr><td><strong>DEMANOUA Lorène</strong></td><td>Rapport de stage (soumis 28 Fév. 2026, resoumis 6 Mars 2026)</td><td><span class="b b-in">Rapport de stage</span></td><td>Non précisé</td><td>Jan.–Mars 2026</td><td><span class="b b-wa">En attente</span> – A demandé délai supplémentaire (permission)</td></tr>
+      <tr><td><strong>ARIEL NJAMEN</strong></td><td>Dépôt de rapport de stage (27 mars 2026)</td><td><span class="b b-in">Rapport de stage</span></td><td>Non précisé</td><td>Mars 2026</td><td><span class="b b-mu">Non évalué</span></td></tr>
+      <tr><td><strong>KENMATIO TEDONGMO Vicens</strong></td><td>Rapport journalier (format officiel, soumis quotidiennement Mar.–Avr. 2026) · Rapport de stage : «Responsable UX/UI Design – Département FabLab»</td><td><span class="b b-pu">Rapport de stage + Journal</span></td><td>FabLab – UX/UI Design</td><td>Mars – Avr. 2026</td><td><span class="b b-ok">Très Bien</span> – Rapport transmis à Ing. KAPTUE. Stage professionnel 1 mois.</td></tr>
+      <tr><td><strong>DIEUMOU KOMBOU Hursel</strong></td><td>Rapport d'activité : «Gestionnaire de Projets IT» · Lettre d'acceptation fin de stage</td><td><span class="b b-in">Rapport d'activité</span></td><td>Gestion de Projets IT</td><td>Mars – Avr. 2026</td><td><span class="b b-ok">Bien</span> – Stage professionnel 2 mois (IME)</td></tr>
+      <tr><td><strong>ATOUNKEP NEYOU Junior Wilfried</strong></td><td>Rapports journaliers Avr.–Mai 2026 (réguliers)</td><td><span class="b b-in">Journal de bord</span></td><td>Infra. &amp; Réseaux</td><td>Avr. – Mai 2026</td><td><span class="b b-ng">Interrompu</span> – Stage interrompu immédiatement le 08/05/2026</td></tr>
+      <tr><td><strong>MAPTUE GRACE Isabelle</strong></td><td>Rapports journaliers 04–08 Mai 2026 (quotidiens, mobiles Huawei)</td><td><span class="b b-in">Journal de bord</span></td><td>Big Data &amp; AI / Infra.</td><td>Avr. – Mai 2026</td><td><span class="b b-ok">Régulier</span> – Retour direction : «soyez plus objectifs sur les tâches prioritaires»</td></tr>
+      <tr><td><strong>YOUNANG Mégane</strong></td><td>Compte-rendu de réunion hebdomadaire · Rapport journalier Infra. Réseaux</td><td><span class="b b-in">CR réunion + Journal</span></td><td>Big Data / Infra.</td><td>Avr. – Mai 2026</td><td><span class="b b-wa">Bien</span> – CR corrigé via IA selon consigne direction</td></tr>
+      <tr><td><strong>ETTA Junior</strong></td><td>Rapports journaliers quotidiens · Propositions de construction et corrections du site GHOC</td><td><span class="b b-pu">Dev. Web + Journal</span></td><td>Développement Web (Sites vitrines)</td><td>Avr. – Mai 2026</td><td><span class="b b-ok">Proactif</span> – A fait des propositions constructives sur le projet GHOC</td></tr>
+      <tr><td><strong>JEAN MARK SHEY Nchurim</strong></td><td>Rapports journaliers Avr. 2026 (format MOD officiel)</td><td><span class="b b-in">Journal de bord</span></td><td>Supervision / Gestion</td><td>Avr. – Mai 2026</td><td><span class="b b-wa">Bien</span> – Retour direction : «prioriser les projets confiés»</td></tr>
+      <tr><td><strong>KENGNE TASSA Pamela</strong></td><td>Rapport de stage – Management des systèmes d'information · Stage WinDev/WebDev</td><td><span class="b b-pu">Rapport de stage</span></td><td>Développement rapide d'apps</td><td>Juil. 2024 – Fév. 2026</td><td><span class="b b-ok">Bien</span> – Attestation corrigée (libellé filière) en mai 2026</td></tr>
+      <tr><td><strong>LANDRY Stéphane / ELONG Stéphane</strong></td><td>Rapport de stage numérique (déposé Aug. 2025) avec corrections détaillées direction</td><td><span class="b b-in">Rapport de stage</span></td><td>Développement logiciel</td><td>Juin – Août 2025</td><td><span class="b b-ok">Très Bon</span> – Direction : «Très bon travail !» avec remarques de mise en forme</td></tr>
+      <tr><td><strong>NGUEKO Samira</strong></td><td>Thème : «Développement d'un site web de réservation de meublés multi-agence»</td><td><span class="b b-pu">Projet de développement web</span></td><td>Développement logiciel</td><td>Juin 2025</td><td><span class="b b-ok">Bien</span> – Direction a demandé une proposition de plan</td></tr>
+      <tr><td><strong>NOUYADJAM NOUNE Carine</strong></td><td>Stage académique – Comptabilité et Gestion des Entreprises</td><td><span class="b b-in">Stage académique</span></td><td>Comptabilité / Gestion</td><td>Juil. – Août 2025</td><td><span class="b b-wa">Bien</span> – Entretien planifié 31/07/2025</td></tr>
+      <tr><td><strong>NGAHTSIMIA RIELLE Arita</strong></td><td>Rapport de stage + Cahier de stage (Mai 2025) · Fiche d'évaluation reçue · Rapport resoumis en Mai 2026 transmis à l'équipe Infra.</td><td><span class="b b-pu">Rapport + Cahier</span></td><td>Infra. &amp; Réseaux / Big Data</td><td>Avr. – Mai 2025</td><td><span class="b b-ok">Bien</span> – Fiche d'évaluation partiellement remplie envoyée</td></tr>
+      <tr><td><strong>MBAIGOL MEMASSEM Joël</strong></td><td>Mémoire (LaTeX) – Génie logiciel / Big Data · 2 versions soumises pour correction</td><td><span class="b b-pu">Mémoire de fin d'études</span></td><td>Développement logiciel</td><td>Fév. 2025</td><td><span class="b b-wa">Bien</span> – Direction a corrigé le mémoire et fourni des remarques détaillées</td></tr>
+      <tr><td><strong>VANA ZOKOM Élie</strong></td><td>Candidature Data Scientist 6 mois – LM soumise</td><td><span class="b b-in">Stage de fin d'études</span></td><td>Big Data &amp; AI</td><td>Jan.–Juil. 2025</td><td><span class="b b-ok">Retenu</span> – Entretien à Beedi Jan. 2025</td></tr>
+      <tr><td><strong>KAMGA Zainab</strong></td><td>Document de projet d'étude (Projet_d'etude_kamga.pdf)</td><td><span class="b b-in">Projet d'études</span></td><td>Non précisé</td><td>Juin 2025</td><td><span class="b b-mu">Reçu</span> – Pas d'évaluation documentée</td></tr>
+      <tr><td><strong>JSAD (anonyme)</strong></td><td>Rapport de stage avec diagramme de flux (demande d'info pour rédaction)</td><td><span class="b b-in">Rapport de stage</span></td><td>Non précisé</td><td>Déc. 2025 – Jan. 2026</td><td><span class="b b-wa">Irrégulier</span> – Contraintes académiques invoquées</td></tr>
+      <tr><td><strong>KAYA Nadia</strong></td><td>Demande de correction de rapport de stage (contact post-notification déc.2025)</td><td><span class="b b-in">Rapport de stage</span></td><td>Non précisé</td><td>Déc. 2025 – Avr. 2026</td><td><span class="b b-wa">En cours</span> – Demande de RDV correction rapport</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-box">
+      <div class="chart-ttl">Types de documents produits (volume estimé)</div>
+      <div class="bar-chart-css">
+        <div class="bar-row"><div class="bar-lbl">Rapports journaliers</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--accent)">150+</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Rapports de stage finaux</div><div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--accent2)">25+</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">CV reçus</div><div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--accent3)">40+</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Lettres de motivation</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--accent4)">25+</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">CR réunions</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent5)">6+</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Mémoires / PFE</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--warning)">3+</div></div></div>
+        <div class="bar-row"><div class="bar-lbl">Projets de dev. (code)</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--danger)">10+</div></div></div>
+      </div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-ttl">Thèmes de mémoires/rapports identifiés</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem;">
+        <span class="b b-in">UX/UI Design – FabLab</span>
+        <span class="b b-in">Tableau Software / BI</span>
+        <span class="b b-in">Big Data Analytics</span>
+        <span class="b b-in">Site de réservation multi-agence</span>
+        <span class="b b-in">Génie logiciel (LaTeX/mémoire)</span>
+        <span class="b b-in">Infrastructure &amp; Réseaux</span>
+        <span class="b b-in">Data Science / IA</span>
+        <span class="b b-in">Archives &amp; Documentation</span>
+        <span class="b b-in">WinDev / WebDev apps</span>
+        <span class="b b-in">Gestion de projets IT</span>
+        <span class="b b-in">Site web Musée Bamougoum</span>
+        <span class="b b-in">Projet GHOC (site vitrine)</span>
+        <span class="b b-in">Chatbot IA intégré</span>
+        <span class="b b-in">Comptabilité de gestion</span>
+        <span class="b b-in">Marketing &amp; communication digitale</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== S5 : ÉCOLES ===== -->
+<div class="section" id="s5">
+  <div class="sec-label">Section 05</div>
+  <h2 class="sec-title">Écoles &amp;<br><em>Partenaires Académiques</em></h2>
+  <p class="sec-intro">Neuf établissements identifiés dans les archives, allant des institutions privées aux universités publiques.</p>
+
+  <div class="tbl-wrap">
+  <table class="dt">
+    <thead><tr><th>Établissement</th><th>Contact / Email</th><th>Filières concernées</th><th>Nb stagiaires</th><th>Type</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td><strong>IME School</strong><br><small>Institut Supérieur de Management et de l'Entrepreneuriat</small></td><td>EGOCHUE Elyane<br><small style="font-family:'IBM Plex Mono',monospace">egochue@ime-school.com<br>egochue@gmail.com</small></td><td>Génie Réseaux &amp; Télécom, Génie Logiciel, UX/UI, Data</td><td><span class="b b-ok">12+</span></td><td><span class="b b-ok">Partenaire</span></td><td>Très Actif</td></tr>
+      <tr><td><strong>ISETAG</strong><br><small>Institut Supérieur d'Études Technologiques et de Gestion</small></td><td>isetagdatabase<br><small style="font-family:'IBM Plex Mono',monospace">isetagdatabase@gmail.com</small></td><td>Informatique (Licence), TIC, Documentation</td><td><span class="b b-ok">12+</span></td><td><span class="b b-ok">Partenaire</span></td><td>Très Actif – Batch CV</td></tr>
+      <tr><td><strong>IUT de Douala</strong><br><small>Institut Universitaire de Technologie</small></td><td>Service stages IUT<br><small style="font-family:'IBM Plex Mono',monospace">iutsatges@yahoo.fr</small></td><td>Génie Réseau &amp; Télécom, Informatique, Génie Industriel</td><td><span class="b b-ok">8+</span></td><td><span class="b b-ok">Partenaire</span></td><td>Actif</td></tr>
+      <tr><td><strong>LEISAM Academy</strong><br><small>Licence professionnelle, Finance, Gestion</small></td><td>DOMBOU KOM Dominique<br><small style="font-family:'IBM Plex Mono',monospace">dominique.dombou@leisam.net<br>stg.pamela.kengne@leisam.academy<br>stg.oceane.tientcheu@leisam.academy<br>stg.manuela.tousse@leisam.academy<br>stg.pierre.yemi@leisam.academy</small></td><td>Gestion, Comptabilité, Réseaux</td><td><span class="b b-ok">5+</span></td><td><span class="b b-ok">Partenaire</span></td><td>Actif – Emails @leisam.academy</td></tr>
+      <tr><td><strong>Université de Douala</strong><br><small>Faculté des Sciences Économiques et de Gestion Appliquée (FSEGA)</small></td><td>Dr KAMOLE Chantal C. Moukoko<br><small style="font-family:'IBM Plex Mono',monospace">kamole2013@gmail.com</small></td><td>Comptabilité &amp; Gestion des Entreprises</td><td><span class="b b-wa">2+</span></td><td><span class="b b-in">Partenaire</span></td><td>Ponctuel – CV transmis</td></tr>
+      <tr><td><strong>École Nationale Supérieure Polytechnique (ENSP)</strong><br><small>École Nationale Supérieure</small></td><td>N.D.</td><td>Génie logiciel (LANDRY Stéphane – 4ème année ENSP)</td><td><span class="b b-wa">1+</span></td><td><span class="b b-in">Informel</span></td><td>Documenté – email Juin 2025</td></tr>
+      <tr><td><strong>Universal Groups</strong></td><td>NGUETI Franck<br><small style="font-family:'IBM Plex Mono',monospace">franck.ngueti@universal-groups.com</small></td><td>Professionnel – Big Data, Développement</td><td><span class="b b-wa">3+</span></td><td><span class="b b-in">Partenaire Technique</span></td><td>Actif</td></tr>
+      <tr><td><strong>H2SOFT</strong></td><td>N.D.<br><small style="font-family:'IBM Plex Mono',monospace">h2soft-cm@gmail.com</small></td><td>Co-recrutement Déc. 2025</td><td><span class="b b-mu">–</span></td><td><span class="b b-mu">Partenaire</span></td><td>Ponctuel</td></tr>
+      <tr><td><strong>Happi Hilaire (Cabinet RH)</strong></td><td>HAPPI Hilaire<br><small style="font-family:'IBM Plex Mono',monospace">hilairehappi@gmail.com</small></td><td>Coordination RH Déc. 2025</td><td><span class="b b-mu">–</span></td><td><span class="b b-mu">Partenaire RH</span></td><td>Ponctuel</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="chart-box">
+    <div class="chart-ttl">Part des stagiaires par établissement</div>
+    <div class="bar-chart-css">
+      <div class="bar-row"><div class="bar-lbl">IME School</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--accent)">~22%</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">ISETAG</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--accent2)">~22%</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">IUT Douala</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--accent3)">~15%</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">LEISAM Academy</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--accent4)">~10%</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Univ. Douala</div><div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--accent5)">~5%</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">ENSP / Polytec</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--warning)">~3%</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">N.D. / Indépendants</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--muted)">~23%</div></div></div>
+    </div>
+  </div>
+
+  <div class="alert a-wa">
+    <strong>Note :</strong> Les établissements UTEC, et les autres grandes écoles camerounaises n'ont pas été directement identifiés dans les emails archivés. Des candidatures y issues sont possibles parmi les stagiaires dont l'école n'est pas précisée dans les échanges. Un registre physique permettrait de compléter ces données.
+  </div>
+</div>
+
+<!-- ===== S6 : COMPÉTENCES ===== -->
+<div class="section" id="s6">
+  <div class="sec-label">Section 06</div>
+  <h2 class="sec-title">Cartographie<br><em>des Compétences</em></h2>
+  <p class="sec-intro">Analyse des profils techniques et spécialités identifiés dans les candidatures, rapports et thèmes de stage.</p>
+
+  <div class="two-col">
+    <div class="chart-box">
+      <div class="chart-ttl">Compétences techniques (fréquence d'occurrence)</div>
+      <div class="skill-bars">
+        <div class="sk-row"><div class="sk-name">Développement web</div><div class="sk-track"><div class="sk-fill" style="width:88%;background:linear-gradient(90deg,var(--accent),#0090ff)"></div></div><div class="sk-val">88%</div></div>
+        <div class="sk-row"><div class="sk-name">Big Data / IA</div><div class="sk-track"><div class="sk-fill" style="width:75%;background:linear-gradient(90deg,var(--accent2),#ff4d6a)"></div></div><div class="sk-val">75%</div></div>
+        <div class="sk-row"><div class="sk-name">Infra. &amp; Réseaux</div><div class="sk-track"><div class="sk-fill" style="width:62%;background:linear-gradient(90deg,var(--accent3),#56ab2f)"></div></div><div class="sk-val">62%</div></div>
+        <div class="sk-row"><div class="sk-name">UX/UI Design</div><div class="sk-track"><div class="sk-fill" style="width:45%;background:linear-gradient(90deg,var(--accent4),#f4a261)"></div></div><div class="sk-val">45%</div></div>
+        <div class="sk-row"><div class="sk-name">Gestion Projets IT</div><div class="sk-track"><div class="sk-fill" style="width:55%;background:linear-gradient(90deg,var(--accent5),#7b2ff7)"></div></div><div class="sk-val">55%</div></div>
+        <div class="sk-row"><div class="sk-name">Tableau / BI</div><div class="sk-track"><div class="sk-fill" style="width:30%;background:linear-gradient(90deg,#f72585,#b5179e)"></div></div><div class="sk-val">30%</div></div>
+        <div class="sk-row"><div class="sk-name">WinDev / WebDev</div><div class="sk-track"><div class="sk-fill" style="width:20%;background:linear-gradient(90deg,#4cc9f0,#4361ee)"></div></div><div class="sk-val">20%</div></div>
+        <div class="sk-row"><div class="sk-name">Comptabilité / Gestion</div><div class="sk-track"><div class="sk-fill" style="width:25%;background:linear-gradient(90deg,#e9c46a,#f4a261)"></div></div><div class="sk-val">25%</div></div>
+        <div class="sk-row"><div class="sk-name">Archives / Documentation</div><div class="sk-track"><div class="sk-fill" style="width:20%;background:linear-gradient(90deg,#90e0ef,#48cae4)"></div></div><div class="sk-val">20%</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="chart-box">
+        <div class="chart-ttl">Répartition par niveau académique</div>
+        <div class="chart-wrap"><canvas id="chartNiveau"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-ttl">Répartition par département d'accueil</div>
+        <div class="chart-wrap"><canvas id="chartDept"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== S7 : PROJETS ===== -->
+<div class="section" id="s7">
+  <div class="sec-label">Section 07</div>
+  <h2 class="sec-title">Projets &amp;<br><em>Clients Identifiés</em></h2>
+  <p class="sec-intro">Recensement des projets et commandes clients sur lesquels des stagiaires et collaborateurs de BIGDATA CENTER ont travaillé.</p>
+
+  <div class="tbl-wrap">
+  <table class="dt">
+    <thead><tr><th>Projet / Client</th><th>Contact Client</th><th>Nature</th><th>Équipe BDC</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Site web – Musée de Bamougoum</strong><br><small style="font-family:'IBM Plex Mono',monospace;color:var(--muted)">bigdata.wd26.francelink.net/MUSEE_DE_BAMOUGOUM_WEB/</small></td>
+        <td>KANKEU TENE Romaric<br><small>kankeutene@mpasarl.com (MPASA SARL)</small></td>
+        <td>Site vitrine dynamique → plateforme interactive</td>
+        <td>«Solange» (Relation Client) + Équipe dev.</td>
+        <td><span class="b b-ok">Version test livrée – Oct. 2024</span></td>
+      </tr>
+      <tr>
+        <td><strong>Projet GHOC – Site web</strong></td>
+        <td>GHOC (client non identifié complètement)</td>
+        <td>Développement web – corrections &amp; propositions</td>
+        <td>ETTA Junior (stagiaire dev. web)</td>
+        <td><span class="b b-in">En cours – Mai 2026</span></td>
+      </tr>
+      <tr>
+        <td><strong>AFRICASWORKS / FabLab BDC</strong><br><small>Projet de développement numérique africain</small></td>
+        <td>DOMCHE Jules (Afropreneurs)<br><small>afropreneurs.jd@gmail.com</small></td>
+        <td>Présentation projet numérique africain</td>
+        <td>Direction Générale</td>
+        <td><span class="b b-wa">Soumis – Avr. 2024</span></td>
+      </tr>
+      <tr>
+        <td><strong>Site web réservation meublés multi-agence</strong></td>
+        <td>Interne / Académique</td>
+        <td>Développement web – projet de stage</td>
+        <td>NGUEKO Samira (stagiaire)</td>
+        <td><span class="b b-in">En cours – Juin 2025</span></td>
+      </tr>
+      <tr>
+        <td><strong>Appels d'offres publics – J360</strong><br><small>Veille permanente des marchés</small></td>
+        <td>J360 (plateforme marchés)</td>
+        <td>Marchés publics / B2B (463–472 marchés)</td>
+        <td>Direction Générale</td>
+        <td><span class="b b-ok">Suivi actif 2025–2026</span></td>
+      </tr>
+      <tr>
+        <td><strong>Épreuves BTS Blanc – ISTA</strong><br><small>IGL2AS, IGL2BJ, TEL2AJ, RES2AS</small></td>
+        <td>NATHE Samuel (Coordo ISTA)<br><small>samuel.nathe@gmail.com · cd.gtic.ista@gmail.com</small></td>
+        <td>Enseignement / Sujets d'examens</td>
+        <td>DOMBOU KOM Dominique (DG-enseignant)</td>
+        <td><span class="b b-ok">Livrés – Mars &amp; Mai 2026</span></td>
+      </tr>
+      <tr>
+        <td><strong>Programme FabLab interne</strong></td>
+        <td>Interne BIGDATA CENTER</td>
+        <td>R&amp;D · UX/UI · Prototypes · Innovation</td>
+        <td>KENMATIO Vicens + équipe FabLab</td>
+        <td><span class="b b-ok">Opérationnel 2024–2026</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ===== S8 : INDICATEURS ===== -->
+<div class="section" id="s8">
+  <div class="sec-label">Section 08</div>
+  <h2 class="sec-title">Tableau de Bord<br><em>des Indicateurs RH</em></h2>
+  <p class="sec-intro">Synthèse des indicateurs clés de performance de la politique RH de BIGDATA CENTER.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi" style="--kc:var(--accent)"><span class="n">~70%</span><div class="l">Taux d'admission global</div><div class="d" style="color:var(--success)">↑ vs ~55% secteur</div></div>
+    <div class="kpi" style="--kc:var(--accent3)"><span class="n">~85%</span><div class="l">Taux de complétion de stage</div><div class="d" style="color:var(--success)">↑ Très élevé</div></div>
+    <div class="kpi" style="--kc:var(--danger)"><span class="n">~4%</span><div class="l">Taux d'interruption</div><div class="d" style="color:var(--success)">↓ Faible – disciplinaire appliqué</div></div>
+    <div class="kpi" style="--kc:var(--warning)"><span class="n">24–48h</span><div class="l">Réactivité aux candidatures</div><div class="d" style="color:var(--success)">↑ Excellente</div></div>
+    <div class="kpi" style="--kc:var(--accent5)"><span class="n">100%</span><div class="l">Traçabilité écrite des décisions</div><div class="d" style="color:var(--success)">Toutes les décisions par email</div></div>
+    <div class="kpi" style="--kc:var(--accent2)"><span class="n">40%</span><div class="l">Maturité SIRH</div><div class="d" style="color:var(--danger)">↓ Principal axe d'amélioration</div></div>
+  </div>
+
+  <div class="chart-box">
+    <div class="chart-ttl">Score de maturité RH par axe (sur 100)</div>
+    <div class="chart-wrap"><canvas id="chartMaturite"></canvas></div>
+  </div>
+</div>
+
+<!-- ===== S9 : RECOMMANDATIONS ===== -->
+<div class="section" id="s9">
+  <div class="sec-label">Section 09</div>
+  <h2 class="sec-title">Recommandations<br><em>Stratégiques</em></h2>
+  <p class="sec-intro">Propositions concrètes pour renforcer la politique RH, valoriser les partenariats et améliorer l'attractivité de BIGDATA CENTER.</p>
+  <div class="reco-grid">
+    <div class="reco"><div class="reco-icon">🗂️</div><div class="reco-title">SIRH simplifié</div><div class="reco-body">Mettre en place un registre centralisé (Airtable, Google Sheets ou logiciel RH open source) pour tracer chaque candidature, entretien, admission et attestation.</div></div>
+    <div class="reco"><div class="reco-icon">📋</div><div class="reco-title">Conventions tripartites</div><div class="reco-body">Standardiser les conventions Stagiaire / BIGDATA CENTER / École avec numérotation et archivage numérique. Déployer systématiquement le modèle d'offre de stage identifié (nov. 2025).</div></div>
+    <div class="reco"><div class="reco-icon">🎓</div><div class="reco-title">Partenariats formels</div><div class="reco-body">Signer des conventions avec POLYTEC, ENSET, UTEC, Université de Douala en plus des partenaires existants. Proposer des journées portes ouvertes et des interventions dans les établissements.</div></div>
+    <div class="reco"><div class="reco-icon">📊</div><div class="reco-title">Rapport RH annuel</div><div class="reco-body">Produire chaque année un rapport institutionnel comme celui-ci, destiné aux écoles, au Ministère de l'Emploi et aux bailleurs potentiels. Renforce la crédibilité et ouvre des financements.</div></div>
+    <div class="reco"><div class="reco-icon">💡</div><div class="reco-title">GED – Base de connaissances</div><div class="reco-body">Archiver et indexer les rapports de stage dans une Gestion Électronique des Documents. Créer des fiches techniques à partir des travaux des stagiaires pour un wiki technique BDC.</div></div>
+    <div class="reco"><div class="reco-icon">🏆</div><div class="reco-title">Programme de reconnaissance</div><div class="reco-body">Instaurer un Prix du Meilleur Stagiaire par semestre, avec lettre de recommandation renforcée et mise en avant sur les réseaux sociaux de BIGDATA CENTER.</div></div>
+    <div class="reco"><div class="reco-icon">📸</div><div class="reco-title">Photos de profil obligatoires</div><div class="reco-body">Exiger une photo professionnelle lors de l'intégration pour constituer le trombinoscope officiel, compléter les dossiers RH et produire les rapports institutionnels.</div></div>
+    <div class="reco"><div class="reco-icon">⚖️</div><div class="reco-title">Conformité légale</div><div class="reco-body">S'assurer que chaque stage est couvert par une convention légale et que les stagiaires bénéficient des protections prévues par le droit camerounais. Déclaration annuelle au Ministère du Travail.</div></div>
+    <div class="reco"><div class="reco-icon">💼</div><div class="reco-title">Partenaires financiers</div><div class="reco-body">Ce rapport constitue une preuve tangible de l'activité de formation. Le présenter aux fondateurs, investisseurs, à la Banque Mondiale, l'AFD et au MINEFI pour accéder à des financements formation.</div></div>
+  </div>
+</div>
+
+<footer>
+  <p style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.5rem">BIGDATA CENTER & AI</p>
+  <p>SARLU · Akwa-Douala, Cameroun</p>
+  <p style="margin:.5rem 0">Tél : <strong>+237 656 286 990</strong> · Mail : <strong>bigdatacenterinfos@gmail.com</strong></p>
+  <hr style="border-color:var(--border);margin:1.5rem auto;max-width:300px">
+  <p>Rapport établi à partir de l'analyse des emails 2019–2026 · Édité le 10 mai 2026</p>
+  <p style="margin-top:.5rem;font-size:.68rem">Document destiné aux établissements partenaires, au Ministère de l'Emploi, aux partenaires financiers et fondateurs de BIGDATA CENTER. Distribution confidentielle.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">✕ Fermer</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────
+const COLORS=['#00d4ff','#ff6b35','#39e890','#ffd166','#c77dff','#f72585','#4cc9f0','#e9c46a','#90e0ef','#ff4060','#a8dadc','#06d6a0'];
+const getColor=i=>COLORS[i%COLORS.length];
+const avatarColors=['#0d3b66','#1b4332','#4a1942','#7b3f00','#1d3557','#3d405b','#283618','#52334a','#2c3e50','#1a1a2e','#0f3460','#16213e'];
+
+// STAGIAIRES DATABASE
+const stagiaires=[
+  // ── PROMO DÉC. 2025 (intégration 16 Déc. 2025) ──
+  {id:1,nom:'KENMOE Astride',email:'astridekenmoe2006@gmail.com',ecole:'IME School',niveau:'Licence 3',dept:'Big Data & BI / Tableau Software',promo:'dec25',status:'ok',mention:'Très bien',periode:'Déc. 2025 – Fév. 2026',tags:['dec25','data','ime'],travaux:['Rapport Tableau Software (pré-admission)','Rapport de stage académique avec chatbot IA intégré','Rapport transmis à Ing. KAPTUE pour exploitation'],note:'Exemplaire – proactivité remarquée par la direction'},
+  {id:2,nom:'NGON Marie',email:'mariengonndag@gmail.com',ecole:'N.D.',niveau:'Licence / Master',dept:'Big Data',promo:'dec25',status:'ok',mention:'Bien',periode:'Déc. 2025 – Fév. 2026',tags:['dec25','data'],travaux:['Rapports journaliers Déc. 2025','Version intermédiaire (Alpha) de mémoire de fin d\'études','Demande de prorogation délai rapport accordée'],note:'Régulière – demande de délai motivée'},
+  {id:3,nom:'TOUSSE MALONTSOB Manuela',email:'manuelatousse7@gmail.com / stg.manuela.tousse@leisam.academy',ecole:'IME School / LEISAM',niveau:'Niveau 3 – Génie Réseaux & Télécom',dept:'BIGDATA ARKIV – Archives & Documentation',promo:'dec25',status:'ok',mention:'Assez bien',periode:'Jan. – Fév. 2026',tags:['dec25','leisam','ime'],travaux:['Bilans journaliers 1 à 4','Rapport_Stage_MANUELA (LEISAM)','Page de garde rapport soumise','Permission médicale accordée (19 Déc. 2025)'],note:'Mention officielle IME – ASSEZ BIEN'},
+  {id:4,nom:'TIENTCHEU Océane',email:'oceanetientcheu511@gmail.com / stg.oceane.tientcheu@leisam.academy',ecole:'LEISAM Academy',niveau:'Niveau 3',dept:'Administration & Gestion',promo:'dec25',status:'ok',mention:'Assez bien',periode:'Déc. 2025 – Mars 2026',tags:['dec25','leisam'],travaux:['Rapport de stage (LEISAM)','Compte-rendu réunion matinale 02/03/2026','Fichier récapitulatif stagiaires ayant remis un rapport','Demande d\'occupation locaux post-stage (accordée jusqu\'au 06/03)'],note:'Très organisée – a géré le suivi administratif stagiaires'},
+  {id:5,nom:'KOUMO Emilienne',email:'emiliennekoumo@gmail.com / emiliennekoumo12@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Développement logiciel',promo:'dec25',status:'ok',mention:'Bien',periode:'Déc. 2025 – Mars 2026',tags:['dec25','dev'],travaux:['Rapports journaliers Déc. 2025','Rapport de stage soumis (3 envois, version corrigée)','Rapport final validé après corrections direction'],note:'Retards signalés mais rapport finalement soumis et corrigé'},
+  {id:6,nom:'NITCHEU NGUEMALEU Blerio',email:'blerionitcheu28@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'Développement / FabLab',promo:'dec25',status:'ok',mention:'Bien',periode:'Déc. 2025 – Mars 2026',tags:['dec25','dev','isetag'],travaux:['Rapports journaliers Fév. 2026','Rapport de stage (version soumise et corrigée)'],note:'Corrections notées par direction'},
+  {id:7,nom:'MAKEMDJEU TANKAM Julienne',email:'juliennemakemdjeu@gmail.com',ecole:'ISETAG',niveau:'Licence',dept:'Archives & Gestion documentaire',promo:'dec25',status:'ok',mention:'Assez bien',periode:'Déc. 2025 – Mars 2026',tags:['dec25','isetag'],travaux:['Entretien 29 Déc. 2025 (confirmé)','Stage Archives et documentation'],note:'Retenue promotion 2026 – a confirmé disponibilité entretien'},
+  {id:8,nom:'SIKALI TENEFO James',email:'jamessikali25@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'Support numérique & Projets digitaux',promo:'dec25',status:'ok',mention:'Bien',periode:'Déc. 2025 – Mars 2026',tags:['dec25','isetag'],travaux:['Entretien 29 Déc. 2025 (confirmé)','Support numérique – projets à vocation sociale et communautaire'],note:'A confirmé sa disponibilité'},
+  {id:9,nom:'NGANGOUA BAKANG BREL Samira',email:'ngangouasamirabrel@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'Support & Formation',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','isetag'],travaux:['Entretien WhatsApp 29 Déc. 2025','Stage Support et formation'],note:'Entretien en ligne confirmé'},
+  {id:10,nom:'KOUAM Djibril',email:'djibrilkouam@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'Développement logiciel / Big Data',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','dev','data','isetag'],travaux:['Entretien 26 Déc. 2025 (convoqué)','Big Data – Génie logiciel'],note:'Profil technique solide identifié dans le CV'},
+  {id:11,nom:'FEUDJIO TSIDJA NELIE',email:'feudjionellie@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'Archives & Documentation / Comptabilité',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','isetag'],travaux:['Entretien 26 Déc. 2025 (convoqué)'],note:'Profil archives et comptabilité'},
+  {id:12,nom:'NOUNAWO KOUNGA Cabrel',email:'nounawocabrel@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'FabLab – Développement logiciel',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','dev','isetag'],travaux:['Entretien 26 Déc. 2025 (convoqué)','FabLab dev. logiciel'],note:'Bases web et prog. identifiées'},
+  {id:13,nom:'NJANTOU Lorenzo',email:'njantoulorenzo@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'FabLab – Développement logiciel',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','dev','isetag'],travaux:['Entretien 26 Déc. 2025 (convoqué)'],note:'Profil web/programmation'},
+  {id:14,nom:'WANDJI NOUGNIG',email:'gilardi21052005@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'Documentation & Support',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','isetag'],travaux:['Entretien 26 Déc. 2025 (convoqué)'],note:'Gestion documentaire'},
+  {id:15,nom:'NGAHEMENI W.',email:'ngahemeniw@yahoo.com',ecole:'ISETAG',niveau:'N.D.',dept:'Développement logiciel',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','dev','isetag'],travaux:['Entretien 26 Déc. 2025 (convoqué)'],note:'Bon niveau technique identifié'},
+  {id:16,nom:'NGAMO Kevine',email:'kevinengamo2022@gmail.com',ecole:'ISETAG',niveau:'N.D.',dept:'Service Marketing & Commercial',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','isetag'],travaux:['Entretien 29 Déc. 2025 (convoqué)','Marketing et commercial'],note:'Bases marketing identifiées'},
+  {id:17,nom:'OTSALA EMERAN Saurel',email:'Emeranotsala2@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Développeur Junior',promo:'dec25',status:'ok',mention:'N.D.',periode:'Déc. 2025 – Mars 2026',tags:['dec25','dev'],travaux:['Entretien 29 Déc. 2025 (convoqué)'],note:'Profil pluridisciplinaire'},
+  {id:18,nom:'NGANKOU Wilfried',email:'ngankouwilfried8@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Administration Système & Réseau',promo:'dec25',status:'wa',mention:'N.D.',periode:'Déc. 2025',tags:['dec25','infra','dev'],travaux:['CV soumis (portfolio: ngankouwilfried-portfolio.vercel.app)','Candidature emploi reclassée en stage pro'],note:'A rectifié la nature de sa candidature (emploi → stage pro)'},
+  // ── PROMO JAN–FÉV. 2026 ──
+  {id:19,nom:'TOTOKO YEMI Pierre Lionel',email:'yemipierrelionel@gmail.com / stg.pierre.yemi@leisam.academy',ecole:'IME School / LEISAM',niveau:'Niveau 3 – Génie Réseaux & Télécom',dept:'Infrastructures & Réseaux',promo:'jan26',status:'ok',mention:'Passable',periode:'Jan. – Fév. 2026',tags:['jan26','infra','ime','leisam'],travaux:['Rapport de stage – Infra. & Réseaux (soumis Fév. 2026)','Rapport corrigé par direction'],note:'Mention officielle IME – PASSABLE'},
+  {id:20,nom:'SIMO KAMEGNI Thérèse Veranne',email:'verannesimo@gmail.com',ecole:'IME School',niveau:'Niveau 3 – Génie Réseaux & Télécom',dept:'Infrastructures & Réseaux',promo:'jan26',status:'ok',mention:'Assez bien',periode:'Jan. – Fév. 2026',tags:['jan26','infra','ime'],travaux:['Stage Infra. & Réseaux (mention officielle IME)'],note:'Mention officielle IME – ASSEZ BIEN'},
+  {id:21,nom:'DEMANOUA Lorène',email:'demanoulorene@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Non précisé',promo:'jan26',status:'wa',mention:'N.D.',periode:'Jan.–Mars 2026',tags:['jan26'],travaux:['Rapport de stage (soumis 28 Fév. 2026)','Rapport resoumis 6 Mars 2026','Demande de délai pour retrait attestation (accordée)'],note:'A demandé permission pour retrait attestation'},
+  {id:22,nom:'ARIEL NJAMEN',email:'arielnjamen662@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Non précisé',promo:'jan26',status:'wa',mention:'N.D.',periode:'Mars 2026',tags:['jan26'],travaux:['Dépôt de rapport de stage – 27 mars 2026'],note:'Rapport reçu'},
+  {id:23,nom:'KAYA Nadia',email:'kayanadia340@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Non précisé',promo:'jan26',status:'wa',mention:'N.D.',periode:'Déc. 2025 – Avr. 2026',tags:['jan26'],travaux:['Demande de RDV pour correction de rapport de stage (Avr. 2026)'],note:'Rapport en cours de correction'},
+  {id:24,nom:'JSAD (anonyme)',email:'jsad4227@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Non précisé',promo:'jan26',status:'wa',mention:'N.D.',periode:'Déc. 2025 – Janv. 2026',tags:['jan26'],travaux:['Rapport avec diagramme de flux (demande info rédaction)','Rapport soumis via Huawei mobile – Mars 2026'],note:'Irrégularités – contraintes académiques invoquées'},
+  // ── PROMO AVR–MAI 2026 ──
+  {id:25,nom:'KENMATIO TEDONGMO Vicens',email:'kenmatiovicens@icloud.com',ecole:'IME School',niveau:'Bac+3 / Professionnel',dept:'FabLab – UX/UI Design',promo:'avr26',status:'ok',mention:'Très Bien',periode:'Mars – Avr. 2026',tags:['avr26','dev','ime'],travaux:['Rapports journaliers quotidiens (modèle officiel, Mars–Avr. 2026)','Rapport de stage : "Responsable UX/UI Design – Département FabLab"','Rapport transmis à Ing. KAPTUE perlykaptue@icloud.com pour exploitation'],note:'Stage professionnel 1 mois – Excellent travail'},
+  {id:26,nom:'DIEUMOU KOMBOU Hursel',email:'hurselkombou@gmail.com',ecole:'IME School',niveau:'Bac+3 / Professionnel',dept:'Gestion de Projets IT',promo:'avr26',status:'ok',mention:'Bien',periode:'Mars – Avr. 2026',tags:['avr26','ime'],travaux:['Rapport d\'activité : Gestionnaire de Projets IT','Lettre d\'acceptation de fin de stage (formalisme exemplaire)','Rapport final soumis 07 Mai 2026'],note:'Stage professionnel 2 mois – Très professionnel dans la communication'},
+  {id:27,nom:'ATOUNKEP NEYOU Junior Wilfried',email:'wilfriedneyou@gmail.com',ecole:'IUT Douala',niveau:'Licence/DUT',dept:'Infrastructure & Réseaux',promo:'avr26',status:'ng',mention:'Interrompu',periode:'Avr. – Mai 2026',tags:['avr26','infra','iut'],travaux:['Rapports journaliers réguliers (format professionnel)','Rapports 27 et 28 Avr. 2026 soumis'],note:'Stage interrompu immédiatement le 08/05/2026 – Notification officielle'},
+  {id:28,nom:'MAPTUE GRACE Isabelle',email:'graceisabellemaptue@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Big Data & AI / Infra.',promo:'avr26',status:'ok',mention:'N.D.',periode:'Avr. – Mai 2026',tags:['avr26','data'],travaux:['Rapports journaliers quotidiens 04–08 Mai 2026','Rapport journalier 1ère journée 28 Avr. 2026'],note:'Régulière – retour direction : prioriser les tâches projets'},
+  {id:29,nom:'YOUNANG Mégane',email:'younangmegane@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Big Data / Infra.',promo:'avr26',status:'ok',mention:'N.D.',periode:'Avr. – Mai 2026',tags:['avr26','data','infra'],travaux:['Compte-rendu de réunion hebdomadaire (corrigé via IA selon consigne)','Rapport journalier infra. réseaux'],note:'CR corrigé à la demande de la direction'},
+  {id:30,nom:'ETTA Junior',email:'ettajunior509@gmail.com',ecole:'IME School',niveau:'N.D.',dept:'Développement Web (Sites vitrines)',promo:'avr26',status:'ok',mention:'N.D.',periode:'Avr. – Mai 2026',tags:['avr26','dev','ime'],travaux:['Rapports journaliers quotidiens (DAILY RAPPORT)','Propositions de construction et corrections du site GHOC','Travaux sur site GHOC (projet client)'],note:'Proactif – propositions constructives appréciées'},
+  {id:31,nom:'JEAN MARK SHEY Nchurim',email:'jeanmarkshey25@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Supervision / Gestion interne',promo:'avr26',status:'ok',mention:'N.D.',periode:'Avr. – Mai 2026',tags:['avr26'],travaux:['Rapports journaliers Avr. 2026 (format MOD officiel)'],note:'Retour direction : prioriser les projets confiés'},
+  {id:32,nom:'NGAHTSIMIA RIELLE Arita',email:'ngahtsimiariellarita@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Infra. & Réseaux / Big Data',promo:'avr26',status:'ok',mention:'Bien',periode:'Avr. 2025 – Mai 2026',tags:['avr26','infra','data'],travaux:['Rapport de stage + Cahier de stage (Mai 2025)','Fiche d\'évaluation reçue (partiellement)','Rapport resoumis Mai 2026, transmis à équipe Infra.'],note:'Fiche d\'évaluation envoyée – rapport transmis à l\'équipe'},
+  {id:33,nom:'FOTSO Audrey',email:'fotsoaudrey15@gmail.com',ecole:'N.D.',niveau:'Encadrante',dept:'RH / Supervision (rôle interne)',promo:'avr26',status:'ok',mention:'Équipe interne',periode:'2025–2026',tags:['avr26'],travaux:['Documents modèles (MODELE.docx, essai.docx)','Supervision quotidienne des stagiaires','Absent au stage le 07/05/2026 (problème matériel)'],note:'Membre équipe interne – Responsable suivi stagiaires'},
+  {id:34,nom:'KENGNE TASSA Pamela',email:'kengnepamela4@gmail.com / stg.pamela.kengne@leisam.academy',ecole:'LEISAM / IME School',niveau:'Bac+3 – Management SI',dept:'Développement rapide d\'apps (WinDev/WebDev)',promo:'avr26',status:'ok',mention:'Bien',periode:'Juil. 2024 – Fév. 2026',tags:['avr26','dev','leisam','ime'],travaux:['Stage développement WinDev / WebDev / WinDev Mobile','Rapport de stage – Management des SI','Demande de correction d\'attestation (libellé filière incorrect)'],note:'Attestation corrigée mai 2026 – demande motivée acceptée'},
+  {id:35,nom:'KOUPGANG ELA Brayan Steve',email:'bramsssteve@gmail.com',ecole:'IUT Douala',niveau:'DUT – Génie Réseau & Télécom',dept:'Infrastructure & Réseaux',promo:'avr26',status:'ok',mention:'N.D.',periode:'Mai 2026',tags:['avr26','infra','iut'],travaux:['Stage académique Génie Réseau & Télécom'],note:'Admis Mai 2026 – entretien réalisé'},
+  {id:36,nom:'POUELMO NGONDIA Russine Maurine',email:'russine.maurine@gmail.com',ecole:'IUT Douala',niveau:'DUT',dept:'Assistante de Direction',promo:'avr26',status:'ok',mention:'N.D.',periode:'Mai 2026',tags:['avr26','iut'],travaux:['Stage Assistante de Direction'],note:'Admise Mai 2026'},
+  {id:37,nom:'TALAFO DZOUDA Chris Yohane',email:'christalafo0@gmail.com',ecole:'IME / Universal Groups',niveau:'N.D.',dept:'Big Data & AI',promo:'avr26',status:'ok',mention:'N.D.',periode:'Mai 2026',tags:['avr26','data','ime'],travaux:['Stage Big Data & AI'],note:'Admis Mai 2026'},
+  {id:38,nom:'NGAHANE ABANDA Cindy Pascale',email:'cindyngahane1@icloud.com',ecole:'IME / Universal Groups',niveau:'N.D.',dept:'Big Data & AI',promo:'avr26',status:'ok',mention:'N.D.',periode:'Mai 2026',tags:['avr26','data','ime'],travaux:['Stage Big Data & AI'],note:'Admise Mai 2026'},
+  {id:39,nom:'NKAMWA GAMI Cabrelle',email:'cabrelgami@gmail.com',ecole:'IUT Douala',niveau:'Licence',dept:'Développement logiciel',promo:'avr26',status:'ok',mention:'N.D.',periode:'Mai 2026',tags:['avr26','dev','iut'],travaux:['Stage Développement logiciel – Big Data & AI'],note:'Admise – enthousiaste à rejoindre l\'équipe'},
+  {id:40,nom:'NGASSA YVAN Loïc',email:'ngassayvanloic447@gmail.com',ecole:'IUT Douala',niveau:'Licence',dept:'Développement logiciel',promo:'avr26',status:'wa',mention:'N.D.',periode:'Mai 2026',tags:['avr26','dev','iut'],travaux:['Stage Développement logiciel'],note:'Empêchement scolaire signalé'},
+  {id:41,nom:'NDJE Joël Honoré',email:'ndjejoelhonore@gmail.com',ecole:'IME / Universal Groups',niveau:'Professionnel',dept:'Programme Stage Professionnel',promo:'avr26',status:'ok',mention:'N.D.',periode:'Mai 2026',tags:['avr26','ime'],travaux:['Retenu Programme de Stage Professionnel IME'],note:'A confirmé réception et attente dates début'},
+  {id:42,nom:'SIMO TOKAM Darelle',email:'simodarelle@gmail.com',ecole:'IUT Douala',niveau:'N.D.',dept:'N.D.',promo:'avr26',status:'wa',mention:'N.D.',periode:'Mai 2026',tags:['avr26','iut'],travaux:['Candidature reçue – en attente de traitement'],note:'N.D.'},
+  {id:43,nom:'NJUEKOU Razillie',email:'razillienjuekou@gmail.com',ecole:'IUT Douala',niveau:'N.D.',dept:'N.D.',promo:'avr26',status:'wa',mention:'N.D.',periode:'Mai 2026',tags:['avr26','iut'],travaux:['Candidature reçue – en attente de traitement'],note:'N.D.'},
+  {id:44,nom:'FOGUET Jordan',email:'foguetjordan@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Demande académique',promo:'avr26',status:'wa',mention:'N.D.',periode:'6 Mai 2026',tags:['avr26'],travaux:['Demande de stage académique reçue (email Huawei)'],note:'Demande reçue – non encore traitée'},
+  {id:45,nom:'LINDOU Bachirou',email:'lindoubachirou95@gmail.com',ecole:'IME School',niveau:'Licence Pro + Cycle Ingénieur',dept:'Ingénieur (RH interne / liaison écoles)',promo:'avr26',status:'ok',mention:'N.D.',periode:'Mai 2026',tags:['avr26','ime'],travaux:['CV soumis pour licence pro et cycle ingénieur','Rôle de liaison avec IME School'],note:'A présenté des excuses pour comportement non conforme'},
+  // ── PROMO 2024–2025 ──
+  {id:46,nom:'LANDRY Stéphane',email:'landrystephane96@gmail.com',ecole:'ENSP (4ème année)',niveau:'Ingénieur (4ème année)',dept:'Développement logiciel',promo:'2024',status:'ok',mention:'Très Bien',periode:'Juin – Août 2025',tags:['2024','dev'],travaux:['Rapport de stage numérique (soumis Août 2025)','Rapport corrigé avec remarques détaillées direction','Corrections mises en forme (TABLE DES MATIÈRES, dédicace nommée, LISTE FIGURES)'],note:'Direction : «Très bon travail !» – ENSP 4ème année'},
+  {id:47,nom:'NGUEKO Samira',email:'samirangueko@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Développement logiciel',promo:'2024',status:'ok',mention:'Bien',periode:'Juin 2025',tags:['2024','dev'],travaux:['Thème de stage : "Développement d\'un site web de réservation de meublés multi-agence"','Plan de stage demandé par la direction'],note:'Thème validé – proposition de plan demandée'},
+  {id:48,nom:'NOUYADJAM NOUNE Carine',email:'carinenouyadjamnoune@gmail.com',ecole:'Université de Douala – FSEGA',niveau:'Licence 1 – Comptabilité & Gestion',dept:'Comptabilité & Gestion des Entreprises',promo:'2024',status:'ok',mention:'Bien',periode:'Juil. – Août 2025',tags:['2024','udla'],travaux:['Stage académique – Comptabilité et Gestion des Entreprises','Entretien planifié 31/07/2025'],note:'Première année, FSEGA Université de Douala'},
+  {id:49,nom:'KENGNE TASSA Pamela (1ère candidature)',email:'kengnepamela4@gmail.com',ecole:'IME School',niveau:'Bac+3 – Management SI',dept:'Développement WinDev/WebDev',promo:'2024',status:'ok',mention:'Bien',periode:'Juil. 2024',tags:['2024','dev','ime'],travaux:['Stage professionnel WinDev / WebDev / WinDev Mobile','1ère candidature – entretien 12 Juil. 2024'],note:'1ère candidature admise – a fait plusieurs stages'},
+  {id:50,nom:'MBAIGOL MEMASSEM Joël',email:'joelmbaigolmemassem@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Développement logiciel / Big Data',promo:'2024',status:'ok',mention:'Bien',periode:'Fév. 2025',tags:['2024','dev','data'],travaux:['Mémoire en LaTeX (2 versions soumises)','Direction a corrigé le mémoire et fourni des remarques détaillées sur la pagination, mise en forme, plan officiel'],note:'Correction mémoire réalisée par BDC'},
+  {id:51,nom:'VANA ZOKOM Élie',email:'eliezokom@gmail.com',ecole:'N.D.',niveau:'Bac+5 (fin études)',dept:'Big Data & AI – Data Scientist',promo:'2024',status:'ok',mention:'N.D.',periode:'Jan. – Juil. 2025 (6 mois)',tags:['2024','data'],travaux:['LM soumise pour Data Scientist','Stage Data Scientist 6 mois prévu'],note:'Entretien à Beedi Janv. 2025 – profil Data Scientist'},
+  {id:52,nom:'NGAHTSIMIA RIELLE Arita (1ère vague)',email:'ngahtsimiariellarita@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Infra. & Réseaux',promo:'2024',status:'ok',mention:'Bien',periode:'Avr. – Mai 2025',tags:['2024','infra'],travaux:['Rapport de stage + Cahier de stage'],note:'Suivi évaluation complet'},
+  {id:53,nom:'KAMGA Zainab',email:'kamgazainab@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'N.D.',promo:'2024',status:'wa',mention:'N.D.',periode:'Juin 2025',tags:['2024'],travaux:['Document de projet d\'étude (Projet_d\'etude_kamga.pdf)'],note:'Document reçu'},
+  {id:54,nom:'KAKEU Lionel',email:'lionelkakeu6@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'N.D.',promo:'2024',status:'wa',mention:'N.D.',periode:'Avr. 2026',tags:['2024'],travaux:['Demande de stage reçue'],note:'Demande reçue – non traitée documentée'},
+  {id:55,nom:'NGANKOU Wilfried (candidature emploi)',email:'ngankouwilfried8@gmail.com',ecole:'N.D.',niveau:'N.D.',dept:'Admin. Système & Réseau',promo:'2024',status:'wa',mention:'N.D.',periode:'Déc. 2025',tags:['2024','infra'],travaux:['CV + portfolio soumis pour poste Admin. Sys. & Réseau'],note:'Candidature emploi → réorientée vers stage professionnel'},
+];
+
+// ─── RENDER STAGIAIRES ───────────────────────────────────────
+const grid=document.getElementById('stagGrid');
+const countLbl=document.getElementById('stag-count-lbl');
+let activeFilter='all', searchVal='';
+
+function initials(nom){return nom.split(' ').filter(w=>w.length>1).slice(0,2).map(w=>w[0]).join('').toUpperCase()}
+
+function statusBadge(s){
+  if(s==='ok') return '<span class="b b-ok">✓ Complété / Actif</span>';
+  if(s==='ng') return '<span class="b b-ng">✕ Interrompu</span>';
+  if(s==='wa') return '<span class="b b-wa">⚠ Partiel / En attente</span>';
+  return '<span class="b b-mu">N.D.</span>';
+}
+
+function render(){
+  const q=searchVal.toLowerCase();
+  const filtered=stagiaires.filter(s=>{
+    const fOk=activeFilter==='all'||s.tags.includes(activeFilter);
+    const sOk=!q||(s.nom.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)||(s.ecole||'').toLowerCase().includes(q)||(s.dept||'').toLowerCase().includes(q)||(s.travaux||[]).join(' ').toLowerCase().includes(q));
+    return fOk&&sOk;
+  });
+  countLbl.textContent=`${filtered.length} stagiaire(s) affiché(s) sur ${stagiaires.length} recensés`;
+  grid.innerHTML=filtered.map(s=>{
+    const ai=avatarColors[s.id%avatarColors.length];
+    const ini=initials(s.nom);
+    const travRes=s.travaux.slice(0,2).map(t=>`• ${t}`).join('<br>');
+    const extra=s.travaux.length>2?`<span style="color:var(--muted);font-size:.7rem">+ ${s.travaux.length-2} autre(s)…</span>`:'';
+    return`<div class="stag-card" onclick="openModal(${s.id})">
+      <div class="stag-head">
+        <div class="stag-avatar" style="background:${ai}">${ini}</div>
+        <div>
+          <div class="stag-name">${s.nom}</div>
+          <div class="stag-role">${s.dept}</div>
+          <div style="margin-top:.35rem">${statusBadge(s.status)}</div>
+        </div>
+      </div>
+      <div class="stag-body">
+        <div class="stag-meta">
+          <span><strong>École :</strong> ${s.ecole||'N.D.'}</span>
+          <span><strong>Niveau :</strong> ${s.niveau||'N.D.'}</span>
+          <span><strong>Période :</strong> ${s.periode}</span>
+          ${s.mention&&s.mention!='N.D.'?`<span><strong>Mention :</strong> ${s.mention}</span>`:''}
+        </div>
+        <div class="stag-works">
+          <div class="stag-works-title">Travaux réalisés</div>
+          ${travRes}<br>${extra}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.querySelectorAll('.f-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter=btn.dataset.f;
+    render();
+  });
+});
+document.getElementById('searchInp').addEventListener('input',e=>{searchVal=e.target.value;render();});
+render();
+
+// ─── MODAL ───────────────────────────────────────────────────
+function openModal(id){
+  const s=stagiaires.find(x=>x.id===id);if(!s)return;
+  const ai=avatarColors[s.id%avatarColors.length];
+  const ini=initials(s.nom);
+  document.getElementById('modalBody').innerHTML=`
+    <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem">
+      <div class="stag-avatar" style="background:${ai};width:64px;height:64px;font-size:1.5rem;flex-shrink:0">${ini}</div>
+      <div>
+        <h2>${s.nom}</h2>
+        <div class="modal-dept">${s.dept}</div>
+        <div>${statusBadge(s.status)}</div>
+      </div>
+    </div>
+    <div class="modal-section"><h3>Informations académiques & contact</h3>
+    <div class="modal-info">
+      <div class="mi"><strong>École</strong><br>${s.ecole||'N.D.'}</div>
+      <div class="mi"><strong>Niveau</strong><br>${s.niveau||'N.D.'}</div>
+      <div class="mi"><strong>Promotion</strong><br>${promoLabel(s.promo)}</div>
+      <div class="mi"><strong>Période</strong><br>${s.periode}</div>
+      <div class="mi" style="grid-column:1/-1"><strong>Email</strong><br><span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--accent)">${s.email}</span></div>
+      ${s.mention&&s.mention!='N.D.'?`<div class="mi"><strong>Mention</strong><br>${s.mention}</div>`:''}
+    </div></div>
+    <div class="modal-section"><h3>Travaux &amp; livrables réalisés</h3>
+    <ul class="works-list">${s.travaux.map(t=>`<li><div class="w-title">${t}</div></li>`).join('')}</ul>
+    </div>
+    ${s.note?`<div class="modal-section"><h3>Appréciation de la Direction</h3><p style="font-size:.85rem;color:var(--text);line-height:1.6;padding:.75rem;background:var(--surface);border-radius:8px;border-left:3px solid var(--accent2)">${s.note}</p></div>`:''}
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+function promoLabel(p){
+  const m={'dec25':'Promotion Décembre 2025','jan26':'Promotion Janvier–Février 2026','avr26':'Promotion Avril–Mai 2026','2024':'Promotion 2024–2025'};
+  return m[p]||p;
+}
+
+// ─── CHARTS ──────────────────────────────────────────────────
+const cfgBase={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#5e7a96',font:{family:'DM Sans',size:11}}}}};
+
+// Évolution
+new Chart(document.getElementById('chartEvol'),{type:'line',data:{labels:['2020','2021','2022','2023','2024','2025','2026*'],datasets:[{label:'Candidatures',data:[2,3,4,5,8,22,14],borderColor:'#00d4ff',backgroundColor:'rgba(0,212,255,.1)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:'#00d4ff'},{label:'Admissions',data:[1,2,3,4,6,16,10],borderColor:'#39e890',backgroundColor:'rgba(57,232,144,.05)',tension:.4,fill:false,borderDash:[6,3],pointRadius:4,pointBackgroundColor:'#39e890'}]},options:{...cfgBase,scales:{x:{ticks:{color:'#5e7a96'},grid:{color:'rgba(30,48,80,.3)'}},y:{ticks:{color:'#5e7a96'},grid:{color:'rgba(30,48,80,.3)'}}}}});
+
+// Issues
+new Chart(document.getElementById('chartIssue'),{type:'doughnut',data:{labels:['Complétés / Actifs','En cours','Non retenus','Interruptions','Sans suite'],datasets:[{data:[68,15,9,4,4],backgroundColor:['#39e890','#00d4ff','#5e7a96','#ff4060','#ffd166'],borderWidth:0,hoverOffset:6}]},options:{...cfgBase,cutout:'65%',plugins:{legend:{position:'right',labels:{color:'#5e7a96',boxWidth:12,font:{size:11}}}}}});
+
+// Niveau
+new Chart(document.getElementById('chartNiveau'),{type:'doughnut',data:{labels:['Licence (L3)','Master / Ingénieur','DUT / BTS','Non précisé'],datasets:[{data:[32,20,18,30],backgroundColor:['#00d4ff','#ff6b35','#39e890','#5e7a96'],borderWidth:0}]},options:{...cfgBase,cutout:'60%',plugins:{legend:{position:'right',labels:{color:'#5e7a96',boxWidth:10,font:{size:10}}}}}});
+
+// Depts
+new Chart(document.getElementById('chartDept'),{type:'bar',data:{labels:['Dév. logiciel','Big Data & AI','Infra. & Réseaux','FabLab/UX','Gestion Projets','Admin./Gestion','Marketing','Archives'],datasets:[{data:[30,22,18,12,8,6,4,4],backgroundColor:['#00d4ff','#ff6b35','#39e890','#c77dff','#ffd166','#4cc9f0','#f72585','#e9c46a'],borderRadius:4,borderWidth:0}]},options:{...cfgBase,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#5e7a96'},grid:{color:'rgba(30,48,80,.3)'}},y:{ticks:{color:'#5e7a96'},grid:{color:'rgba(30,48,80,.3)'}}}}});
+
+// Maturité
+new Chart(document.getElementById('chartMaturite'),{type:'radar',data:{labels:['Réactivité candidatures','Suivi journalier','Taux admission','Partenariats écoles','Documentation','SIRH / Digital','Conformité légale','Base de connaissances'],datasets:[{label:'BIGDATA CENTER 2026',data:[85,78,70,72,65,40,55,60],backgroundColor:'rgba(0,212,255,.15)',borderColor:'#00d4ff',pointBackgroundColor:'#00d4ff',pointRadius:4},{label:'Cible 2027',data:[90,85,75,85,80,75,80,80],backgroundColor:'rgba(57,232,144,.07)',borderColor:'rgba(57,232,144,.4)',borderDash:[5,3],pointRadius:3,pointBackgroundColor:'rgba(57,232,144,.5)'}]},options:{...cfgBase,scales:{r:{grid:{color:'rgba(30,48,80,.4)'},angleLines:{color:'rgba(30,48,80,.4)'},ticks:{color:'#5e7a96',backdropColor:'transparent',font:{size:9}},pointLabels:{color:'#5e7a96',font:{size:11}}}}}});
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Tasks – InternMS</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Intern Portal</div></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html"  class="nav-item active"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="tasks.html"      class="nav-item"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>My Tasks</a>
+      <a href="attendance.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <a href="calendar.html"   class="nav-item"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"    class="nav-item"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>My Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">I</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Intern</div><div class="sidebar-user-role">Intern</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">My Tasks</div><div class="topbar-subtitle">View and submit assigned tasks</div></div>
+      </div>
+    </div>
+    <div class="page-content">
+
+      <!-- Stats -->
+      <div class="stats-grid mb-24" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-address-book"></i></div><div class="stat-info"><div class="stat-value" id="s-total">—</div><div class="stat-label">Total</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="fa-solid fa-stopwatch"></i></div><div class="stat-info"><div class="stat-value" id="s-pending">—</div><div class="stat-label">Pending</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-paper-plane"></i></div><div class="stat-info"><div class="stat-value" id="s-submitted">—</div><div class="stat-label">Submitted</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div><div class="stat-info"><div class="stat-value" id="s-approved">—</div><div class="stat-label">Approved</div></div></div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="search-input"><span><i class="fa-solid fa-magnifying-glass-minus"></i></span><input type="text" id="search" placeholder="Search tasks..." oninput="filterTasks()"></div>
+        <select class="form-control" style="width:160px;" id="status-filter" onchange="filterTasks()">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="submitted">Submitted</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <select class="form-control" style="width:140px;" id="priority-filter" onchange="filterTasks()">
+          <option value="">All Priority</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+
+      <!-- Tasks Grid -->
+      <div id="tasks-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">Loading tasks...</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Submit Modal -->
+<div class="modal-overlay" id="submit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="submit-task-title">Submit Task</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;" id="submit-task-meta"></div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('submit-modal').classList.remove('open')">✕</button>
+    </div>
+    <form id="submit-form">
+      <div class="form-group">
+        <label class="form-label">Your Submission / Work Done</label>
+        <textarea class="form-control" id="submission-text" rows="6" placeholder="Describe what you did, paste links, or provide your work summary..." required></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('submit-modal').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submit-btn">📤 Submit Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Task Detail Modal -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header"><div class="modal-title">Task Details</div><button class="modal-close" onclick="document.getElementById('detail-modal').classList.remove('open')">✕</button></div>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireIntern(); populateSidebarUser(); initLogout();
+let allTasks=[], submitTaskId=null;
+
+async function loadTasks() {
+  try {
+    const [tasks, stats] = await Promise.all([apiFetch('/tasks/my'), apiFetch('/tasks/my/stats')]);
+    allTasks = tasks;
+    document.getElementById('s-total').textContent    = stats.total;
+    document.getElementById('s-pending').textContent  = stats.pending;
+    document.getElementById('s-submitted').textContent= stats.submitted;
+    document.getElementById('s-approved').textContent = stats.approved;
+    renderTasks(allTasks);
+  } catch(e){toast(e.message,'error');}
+}
+
+function renderTasks(list) {
+  const grid = document.getElementById('tasks-grid');
+  if(!list.length) { grid.innerHTML='<div style="grid-column:1/-1;"><div class="empty-state"><p>No tasks found</p></div></div>'; return; }
+  const priorityColor = {high:'var(--danger)',medium:'var(--warning)',low:'var(--info)'};
+  const statusColor   = {pending:'var(--warning)',submitted:'var(--info)',approved:'var(--success)',rejected:'var(--danger)'};
+  grid.innerHTML = list.map(t=>`
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:var(--transition);cursor:pointer;border-left:3px solid ${priorityColor[t.priority]||'var(--border)'};" onclick="viewTask(${t.id})" onmouseover="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div class="flex-between mb-16">
+        <div class="flex gap-8">${priorityBadge(t.priority)}${statusBadge(t.status)}</div>
+        <span style="font-size:11px;color:var(--text-muted);">${t.deadline?'⏰ '+fmtDate(t.deadline):'No deadline'}</span>
+      </div>
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:8px;">${t.title}</h3>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">${(t.description||'No description provided.').substring(0,100)}${t.description&&t.description.length>100?'...':''}</p>
+      <div class="flex-between">
+        <span style="font-size:12px;color:var(--text-muted);">Assigned by ${t.admin_name||'Admin'}</span>
+        ${t.status==='pending'||t.status==='rejected'?`<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openSubmit(${t.id})">📤 Submit</button>`:''}
+      </div>
+      ${t.status==='rejected'&&t.admin_feedback?`<div style="margin-top:12px;padding:10px;background:var(--danger-bg);border-radius:8px;font-size:12px;color:var(--danger);">Feedback: ${t.admin_feedback}</div>`:''}
+      ${t.status==='approved'&&t.admin_feedback?`<div style="margin-top:12px;padding:10px;background:var(--success-bg);border-radius:8px;font-size:12px;color:var(--success);">✅ ${t.admin_feedback}</div>`:''}
+    </div>`).join('');
+}
+
+function filterTasks() {
+  const q=document.getElementById('search').value.toLowerCase(), s=document.getElementById('status-filter').value, p=document.getElementById('priority-filter').value;
+  renderTasks(allTasks.filter(t=>(!s||t.status===s)&&(!p||t.priority===p)&&(!q||t.title.toLowerCase().includes(q))));
+}
+
+function openSubmit(id) {
+  submitTaskId=id; const t=allTasks.find(x=>x.id===id); if(!t) return;
+  document.getElementById('submit-task-title').textContent='Submit: '+t.title;
+  document.getElementById('submit-task-meta').textContent=`Priority: ${t.priority} · Deadline: ${fmtDate(t.deadline)}`;
+  document.getElementById('submission-text').value=t.submission_text||'';
+  document.getElementById('submit-modal').classList.add('open');
+}
+
+document.getElementById('submit-form').addEventListener('submit',async e=>{
+  e.preventDefault(); const btn=document.getElementById('submit-btn'); btn.disabled=true; btn.textContent='Submitting...';
+  try {
+    await apiFetch(`/tasks/${submitTaskId}/submit`,{method:'PATCH',body:JSON.stringify({submission_text:document.getElementById('submission-text').value})});
+    toast('Task submitted successfully!','success'); document.getElementById('submit-modal').classList.remove('open'); loadTasks();
+  } catch(e){toast(e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='📤 Submit Task';}
+});
+
+function viewTask(id) {
+  const t=allTasks.find(x=>x.id===id); if(!t) return;
+  document.getElementById('detail-content').innerHTML=`
+    <div class="flex gap-8 mb-16">${priorityBadge(t.priority)}${statusBadge(t.status)}</div>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:12px;">${t.title}</h2>
+    <div class="form-grid mb-16">
+      <div><div class="form-label">Assigned By</div><p style="font-size:13px;">${t.admin_name||'Admin'}</p></div>
+      <div><div class="form-label">Deadline</div><p style="font-size:13px;">${fmtDate(t.deadline)}</p></div>
+      <div><div class="form-label">Assigned</div><p style="font-size:13px;">${fmtDate(t.created_at)}</p></div>
+      ${t.submitted_at?`<div><div class="form-label">Submitted</div><p style="font-size:13px;">${fmtDate(t.submitted_at)}</p></div>`:''}
+    </div>
+    ${t.description?`<div class="form-group"><div class="form-label">Description</div><div style="font-size:13px;color:var(--text-secondary);margin-top:6px;line-height:1.6;">${t.description}</div></div>`:''}
+    ${t.submission_text?`<div class="form-group"><div class="form-label">Your Submission</div><div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;font-size:13px;margin-top:6px;">${t.submission_text}</div></div>`:''}
+    ${t.admin_feedback?`<div class="form-group"><div class="form-label">Admin Feedback</div><div style="background:${t.status==='approved'?'var(--success-bg)':'var(--danger-bg)'};border-radius:8px;padding:12px;font-size:13px;color:${t.status==='approved'?'var(--success)':'var(--danger)'};margin-top:6px;">${t.admin_feedback}</div></div>`:''}
+    ${t.status==='pending'||t.status==='rejected'?`<div style="margin-top:16px;"><button class="btn btn-primary w-full" onclick="document.getElementById('detail-modal').classList.remove('open');openSubmit(${t.id})">📤 Submit Task</button></div>`:''}`;
+  document.getElementById('detail-modal').classList.add('open');
+}
+loadTasks();
+</script>
+</body>
+</html>

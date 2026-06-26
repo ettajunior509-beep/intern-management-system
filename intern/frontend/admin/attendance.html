@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Attendance – InternMS Admin</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Admin Portal</div></div></div>
+     <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item active" data-page="dashboard.html"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="interns.html"   class="nav-item" data-page="interns.html"><span class="nav-icon"><i class="fa-solid fa-users"></i></span>Interns</a>
+      <a href="tasks.html"     class="nav-item" data-page="tasks.html"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>Tasks</a>
+      <a href="attendance.html"class="nav-item" data-page="attendance.html"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <div class="nav-section-label">Tools</div>
+      <a href="calendar.html"  class="nav-item" data-page="calendar.html"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <a href="reports.html"   class="nav-item" data-page="reports.html"><span class="nav-icon"><i class="fa-regular fa-address-book"></i></span>Reports</a>
+      <a href="evaluations.html" class="nav-item" data-page="evaluations.html"><span class="nav-icon"><i class="fa-brands fa-galactic-senate"></i></span>Evaluations</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"   class="nav-item" data-page="profile.html"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">A</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">Attendance</div><div class="topbar-subtitle">Monitor intern check-ins</div></div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost btn-sm" onclick="loadData()">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="page-content">
+
+      <!-- Stats -->
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div><div class="stat-info"><div class="stat-value" id="s-present">—</div><div class="stat-label">Present Today</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="fa-solid fa-stopwatch"></i></div><div class="stat-info"><div class="stat-value" id="s-late">—</div><div class="stat-label">Late Today</div></div></div>
+        <div class="stat-card"><div class="stat-icon red"><i class="fa-brands fa-mixer"></i></div><div class="stat-info"><div class="stat-value" id="s-absent">—</div><div class="stat-label">Absent Today</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-users"></i></div><div class="stat-info"><div class="stat-value" id="s-total">—</div><div class="stat-label">Total Records</div></div></div>
+      </div>
+
+      <div class="grid-2 mb-24">
+        <!-- Intern Summary -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Attendance Summary by Intern</div></div>
+          <div id="summary-list"><p class="text-muted">Loading...</p></div>
+        </div>
+        <!-- Chart -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Today's Overview</div></div>
+          <canvas id="attChart" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Records Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Attendance Records</div>
+          <div class="flex gap-8">
+            <input type="date" class="form-control" id="date-filter" style="width:160px;" onchange="loadRecords()">
+            <select class="form-control" style="width:140px;" id="status-filter" onchange="loadRecords()">
+              <option value="">All Status</option>
+              <option value="present">Present</option>
+              <option value="late">Late</option>
+              <option value="absent">Absent</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Intern</th><th>Date</th><th>Check-in Time</th><th>Status</th></tr></thead>
+            <tbody id="att-body"><tr><td colspan="4" class="text-center text-muted" style="padding:40px;">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireAdmin(); populateSidebarUser(); initLogout();
+
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('date-filter').value = today;
+
+async function loadData() {
+  await Promise.all([loadStats(), loadSummary(), loadRecords()]);
+}
+
+async function loadStats() {
+  try {
+    const recs = await apiFetch(`/attendance?date=${today}`);
+    let present=0,late=0,absent=0;
+    recs.forEach(r=>{ if(r.status==='present')present++; else if(r.status==='late')late++; else absent++; });
+    document.getElementById('s-present').textContent=present;
+    document.getElementById('s-late').textContent=late;
+    document.getElementById('s-absent').textContent=absent;
+    document.getElementById('s-total').textContent=recs.length;
+    new Chart(document.getElementById('attChart'),{
+      type:'doughnut',
+      data:{labels:['Present','Late','Absent'],datasets:[{data:[present,late,absent],backgroundColor:['#10b981','#f59e0b','#ef4444'],borderWidth:0,hoverOffset:6}]},
+      options:{plugins:{legend:{labels:{color:'#94a3b8',font:{size:13}}}},cutout:'65%'}
+    });
+  } catch(e){}
+}
+
+async function loadSummary() {
+  try {
+    const stats = await apiFetch('/attendance/stats');
+    const el = document.getElementById('summary-list');
+    if(!stats.length){el.innerHTML='<div class="empty-state"><p>No attendance data</p></div>';return;}
+    el.innerHTML=stats.map(s=>{
+      const total=parseInt(s.total)||1;
+      const pct=Math.round((parseInt(s.present||0)/total)*100);
+      return `<div style="padding:10px 0;border-bottom:1px solid var(--border);">
+        <div class="flex-between mb-8">
+          <div class="flex gap-8"><div class="avatar avatar-sm">${initials(s.full_name)}</div><span style="font-size:13px;font-weight:600;">${s.full_name}</span></div>
+          <div class="flex gap-8">
+            <span class="badge badge-success">${s.present||0} P</span>
+            <span class="badge badge-warning">${s.late||0} L</span>
+            <span class="badge badge-danger">${s.absent||0} A</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+      </div>`;
+    }).join('');
+  } catch(e){}
+}
+
+async function loadRecords() {
+  try {
+    const date=document.getElementById('date-filter').value;
+    const status=document.getElementById('status-filter').value;
+    let url='/attendance?';
+    if(date) url+=`date=${date}&`;
+    if(status) url+=`status=${status}&`;
+    const recs=await apiFetch(url);
+    const tb=document.getElementById('att-body');
+    if(!recs.length){tb.innerHTML='<tr><td colspan="4"><div class="empty-state"><p>No records found</p></div></td></tr>';return;}
+    tb.innerHTML=recs.map(r=>`
+      <tr>
+        <td><div class="flex gap-8"><div class="avatar avatar-sm">${initials(r.intern_name)}</div><span style="font-size:13px;font-weight:600;">${r.intern_name}</span></div></td>
+        <td>${fmtDate(r.date)}</td>
+        <td>${fmtTime(r.check_in_time)}</td>
+        <td>${statusBadge(r.status)}</td>
+      </tr>`).join('');
+  } catch(e){toast(e.message,'error');}
+}
+loadData();
+</script>
+</body>
+</html>

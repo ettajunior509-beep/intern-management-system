@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Dashboard – InternMS</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div><div class="logo-text">InternMS</div><div class="logo-sub">Admin Portal</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item active" data-page="dashboard.html"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="interns.html"   class="nav-item" data-page="interns.html"><span class="nav-icon"><i class="fa-solid fa-users"></i></span>Interns</a>
+      <a href="tasks.html"     class="nav-item" data-page="tasks.html"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>Tasks</a>
+      <a href="attendance.html"class="nav-item" data-page="attendance.html"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <div class="nav-section-label">Tools</div>
+      <a href="calendar.html"  class="nav-item" data-page="calendar.html"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <a href="reports.html"   class="nav-item" data-page="reports.html"><span class="nav-icon"><i class="fa-regular fa-address-book"></i></span>Reports</a>
+      <a href="evaluations.html" class="nav-item" data-page="evaluations.html"><span class="nav-icon"><i class="fa-brands fa-galactic-senate"></i></span>Evaluations</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"   class="nav-item" data-page="profile.html"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role">Administrator</div>
+        </div>
+        <button data-logout title="Logout" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">Dashboard</div><div class="topbar-subtitle" id="greeting">Good morning</div></div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" id="notif-btn" title="Notifications"><span><i class="fa-solid fa-bell-concierge"></i></span><span class="topbar-badge" id="pending-badge" style="display:none;">!</span></button>
+        <a href="profile.html"><button class="topbar-btn" title="Profile"><i class="fa-solid fa-circle-user"></i></button></a>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="page-header">
+        <h1>Welcome back, <span id="admin-name">Admin</span></h1>
+        <p id="today-date">Loading...</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-users"></i></div><div class="stat-info"><div class="stat-value" id="s-total">—</div><div class="stat-label">Total Interns</div></div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div><div class="stat-info"><div class="stat-value" id="s-active">—</div><div class="stat-label">Active Interns</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="fa-solid fa-stopwatch"></i></div><div class="stat-info"><div class="stat-value" id="s-pending">—</div><div class="stat-label">Pending Approvals</div></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-address-book"></i></div><div class="stat-info"><div class="stat-value" id="s-tasks">—</div><div class="stat-label">Total Tasks</div></div></div>
+        <div class="stat-card"><div class="stat-icon red"><i class="fa-regular fa-address-book"></i></div><div class="stat-info"><div class="stat-value" id="s-att">—</div><div class="stat-label">Present Today</div></div></div>
+      </div>
+
+      <!-- Charts + Pending -->
+      <div class="grid-2 mb-24">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Intern Status</div></div>
+          <canvas id="statusChart" height="220"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Pending Approvals</div><div class="card-subtitle">Awaiting review</div></div>
+            <a href="interns.html" class="btn btn-ghost btn-sm">View All</a>
+          </div>
+          <div id="pending-list"><div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-stopwatch"></i></div><p>No pending registrations</p></div></div>
+        </div>
+      </div>
+
+      <!-- Recent Tasks + Recent Attendance -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recent Tasks</div>
+            <a href="tasks.html" class="btn btn-ghost btn-sm">View All</a>
+          </div>
+          <div id="recent-tasks"><p class="text-muted">Loading...</p></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Today's Attendance</div>
+            <a href="attendance.html" class="btn btn-ghost btn-sm">View All</a>
+          </div>
+          <div id="today-att"><p class="text-muted">Loading...</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireAdmin();
+populateSidebarUser();
+initLogout();
+
+const user = Auth.user();
+document.getElementById('admin-name').textContent = user?.full_name?.split(' ')[0] || 'Admin';
+const now = new Date();
+const hr = now.getHours();
+document.getElementById('greeting').textContent = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+document.getElementById('today-date').textContent = now.toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+async function loadStats() {
+  try {
+    const s = await apiFetch('/interns/stats');
+    document.getElementById('s-total').textContent   = s.total;
+    document.getElementById('s-active').textContent  = s.active;
+    document.getElementById('s-pending').textContent = s.pending;
+    document.getElementById('s-tasks').textContent   = s.tasks;
+    document.getElementById('s-att').textContent     = s.attendance;
+    if (s.pending > 0) document.getElementById('pending-badge').style.display = 'grid';
+    renderStatusChart(s.active, s.pending, s.total - s.active - s.pending);
+  } catch(e) { toast(e.message,'error'); }
+}
+
+function renderStatusChart(active, pending, rejected) {
+  new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Active','Pending','Rejected'],
+      datasets: [{ data: [active, pending, rejected], backgroundColor: ['#10b981','#f59e0b','#ef4444'], borderWidth: 0, hoverOffset: 6 }]
+    },
+    options: { plugins: { legend: { labels: { color:'#94a3b8', font:{size:13} } } }, cutout:'68%' }
+  });
+}
+
+async function loadPending() {
+  try {
+    const interns = await apiFetch('/interns?status=pending');
+    const el = document.getElementById('pending-list');
+    if (!interns.length) { el.innerHTML = '<div class="empty-state"><p>No pending registrations</p></div>'; return; }
+    el.innerHTML = interns.slice(0,5).map(i => `
+      <div class="flex-between" style="padding:10px 0;border-bottom:1px solid var(--border);">
+        <div class="flex gap-12">
+          <div class="avatar avatar-sm">${initials(i.full_name)}</div>
+          <div><div style="font-size:13px;font-weight:600;">${i.full_name}</div><div style="font-size:12px;color:var(--text-muted);">${i.email}</div></div>
+        </div>
+        <div class="flex gap-8">
+          <button class="btn btn-success btn-sm" onclick="approve(${i.id})">✓</button>
+          <button class="btn btn-danger btn-sm"  onclick="reject(${i.id})">✗</button>
+        </div>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+async function approve(id) {
+  try { await apiFetch(`/interns/${id}/status`,{method:'PATCH',body:JSON.stringify({status:'approved'})}); toast('Intern approved!','success'); loadStats(); loadPending(); } catch(e){ toast(e.message,'error'); }
+}
+async function reject(id) {
+  if (!confirm('Reject this intern?')) return;
+  try { await apiFetch(`/interns/${id}/status`,{method:'PATCH',body:JSON.stringify({status:'rejected'})}); toast('Intern rejected','info'); loadStats(); loadPending(); } catch(e){ toast(e.message,'error'); }
+}
+
+async function loadRecentTasks() {
+  try {
+    const tasks = await apiFetch('/tasks?status=submitted');
+    const el = document.getElementById('recent-tasks');
+    if (!tasks.length) { el.innerHTML = '<div class="empty-state"><p>No submitted tasks</p></div>'; return; }
+    el.innerHTML = `<div class="table-wrapper"><table><thead><tr><th>Task</th><th>Intern</th><th>Status</th></tr></thead><tbody>${
+      tasks.slice(0,5).map(t => `<tr><td>${t.title}</td><td>${t.intern_name}</td><td>${statusBadge(t.status)}</td></tr>`).join('')
+    }</tbody></table></div>`;
+  } catch(e) {}
+}
+
+async function loadTodayAtt() {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const att = await apiFetch(`/attendance?date=${today}`);
+    const el = document.getElementById('today-att');
+    if (!att.length) { el.innerHTML = '<div class="empty-state"><p>No check-ins yet today</p></div>'; return; }
+    el.innerHTML = `<div class="table-wrapper"><table><thead><tr><th>Intern</th><th>Time</th><th>Status</th></tr></thead><tbody>${
+      att.slice(0,5).map(a => `<tr><td>${a.intern_name}</td><td>${fmtTime(a.check_in_time)}</td><td>${statusBadge(a.status)}</td></tr>`).join('')
+    }</tbody></table></div>`;
+  } catch(e) {}
+}
+
+loadStats(); loadPending(); loadRecentTasks(); loadTodayAtt();
+</script>
+</body>
+</html>

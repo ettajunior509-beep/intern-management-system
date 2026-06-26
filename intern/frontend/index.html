@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>BIGDATA CENTER & AI – Intern Management Portal</title>
+<meta name="description" content="BIGDATA CENTER & AI official intern management portal. Apply, track tasks, attendance and evaluations. Akwa-Douala, Cameroun.">
+<link rel="stylesheet" href="css/auth.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+body{
+  background:var(--bg-primary);
+  font-family:'Inter',sans-serif;margin:0;
+}
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 60px;
+  background:rgba(5,5,5,0.7);
+  backdrop-filter:blur(20px);
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.nav-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.nav-brand .icon{
+  width:44px;
+  height:44px;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  box-shadow:0 8px 32px rgba(59,130,246,0.3);
+}
+.nav-brand span{
+  font-size:20px;
+  font-weight:800;
+  color:#f8fafc;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.5px;
+}
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:28px;
+}
+.nav-links a{
+  font-size:14px;
+  font-weight:500;
+  color:#94a3b8;
+  transition:color 0.2s;
+}
+.nav-links a:hover{
+  color:#f0f2ff;
+}
+.nav-cta{
+  display:flex;
+  gap:10px;
+}
+.btn-outline{
+  padding:10px 24px;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:100px;
+  color:#f8fafc;
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  background:rgba(255,255,255,0.03);
+  transition:all 0.3s;
+}
+.btn-outline:hover{
+  border-color:rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.08);
+}
+.btn-filled{
+  padding:10px 24px;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  border:none;
+  border-radius:100px;
+  color:#fff;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.3s;
+  box-shadow:0 8px 24px rgba(59,130,246,0.3);
+}
+.btn-filled:hover{
+  opacity:0.9;
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(59,130,246,0.4);
+}
+.hero-body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:100px 24px 80px;
+  position:relative;
+  overflow:hidden;
+  background: radial-gradient(circle at 50% 0%, rgba(59,130,246,0.15) 0%, transparent 60%);
+}
+.hero-body::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 80%);
+  pointer-events:none;
+  z-index: -1;
+}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(59,130,246,0.1);
+  border:1px solid rgba(59,130,246,0.2);
+  border-radius:100px;
+  padding:8px 20px;
+  font-size:13px;
+  font-weight:600;
+  color:#60a5fa;
+  margin-bottom:32px;
+  backdrop-filter: blur(10px);
+}
+.hero-title{
+  font-size:72px;
+  font-weight:900;
+  line-height:1.05;
+  max-width:900px;
+  margin:0 auto 24px;
+  letter-spacing:-2px;
+  font-family: 'Outfit', sans-serif;
+}
+.hero-title span{
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6,#ec4899);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  font-size:18px;
+  color:#94a3b8;
+  max-width:640px;
+  margin:0 auto 48px;
+  line-height:1.7;
+}
+.hero-note{
+  max-width:760px;
+  margin:0 auto 28px;
+  padding:18px 24px;
+  border-radius:18px;
+  background:rgba(59,130,246,0.08);
+  border:1px solid rgba(59,130,246,0.18);
+  color:#c7d2fe;
+  font-size:15px;
+  line-height:1.7;
+}
+.hero-note strong{
+  color:#f8fafc;
+}
+.hero-cta{
+  display:flex;
+  gap:16px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+.btn-hero-primary{
+  padding:16px 40px;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  border:none;
+  border-radius:100px;
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 8px 32px rgba(59,130,246,0.4);
+  transition:all 0.3s;
+  text-decoration:none;
+}
+.btn-hero-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(59,130,246,0.5);
+}
+.btn-hero-outline{
+  padding:16px 40px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:100px;
+  color:#f8fafc;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.3s;
+  text-decoration:none;
+  backdrop-filter: blur(10px);
+}
+.btn-hero-outline:hover{
+  border-color:rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.08);
+  transform: translateY(-3px);
+}
+#about{
+  padding:100px 60px;
+  background:var(--bg-primary);
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+#about .about-stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:24px;
+  margin-bottom:64px;
+}
+#about .about-details-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+  margin-bottom:48px;
+}
+@media (max-width: 1024px) {
+  #about{padding:80px 40px;}
+  #about .about-stats-row{grid-template-columns:repeat(2,1fr);gap:20px;}
+  #about .about-details-row{grid-template-columns:1fr;}
+}
+@media (max-width: 768px) {
+  #about{padding:60px 30px;}
+  .section-title{font-size:38px;}
+  .section-sub{font-size:17px;max-width:100%;}
+  #about .about-stats-row{grid-template-columns:1fr;}
+  #about .about-details-row{gap:22px;}
+}
+@media (max-width: 425px) {
+  #about{padding:50px 20px;}
+  .section-title{font-size:34px;}
+  .section-sub{font-size:16px;}
+  #about .about-stats-row{gap:18px;}
+  #about .about-details-row{gap:20px;}
+  #about .about-departments-grid{grid-template-columns:1fr !important;}
+}
+@media (max-width: 375px) {
+  #about{padding:42px 16px;}
+  .section-title{font-size:30px;}
+  .section-sub{font-size:15px;}
+}
+@media (max-width: 320px) {
+  #about{padding:32px 12px;}
+  .section-title{font-size:26px;}
+  .section-sub{font-size:14px;}
+  #about .about-stats-row > div{padding:24px;}
+}
+.features{
+  padding:100px 60px;
+  background:#0a0a0a;
+}
+.section-title{
+  text-align:center;
+  font-size:42px;
+  font-weight:800;
+  margin-bottom:16px;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -1px;
+}
+.section-sub{
+  text-align:center;
+  color:#94a3b8;
+  margin-bottom:60px;
+  font-size:18px;
+  max-width: 600px;
+  margin-inline: auto;
+}
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:32px;
+  max-width:1200px;
+  margin:0 auto;
+}
+.feature-card{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:24px;
+  padding:40px 32px;
+  transition:all 0.4s;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:4px;
+  background:linear-gradient(90deg, #3b82f6, transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.feature-card:hover{
+  border-color:rgba(59,130,246,0.2);
+  transform:translateY(-8px);
+  background: rgba(255,255,255,0.03);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.feature-card:hover::before{
+  opacity: 1;
+}
+.fc-icon{
+  width:64px;
+  height:64px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  font-size:32px;
+  margin-bottom:24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.fc-icon.p{
+  background:rgba(59,130,246,0.15);
+  color: #60a5fa;
+}
+.fc-icon.g{
+  background:rgba(16,185,129,0.15);
+}
+.fc-icon.a{
+  background:rgba(245,158,11,0.15);
+}
+.fc-icon.r{
+  background:rgba(239,68,68,0.15);
+}
+.fc-icon.b{
+  background:rgba(14,165,233,0.15);
+}
+.fc-icon.v{
+  background:rgba(139,92,246,0.15);
+}
+.feature-card h3{
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:12px;
+  font-family: 'Outfit', sans-serif;
+}
+.feature-card p{
+  font-size:15px;
+  color:#94a3b8;
+  line-height:1.7;
+}
+.cta-section{
+  padding:120px 60px;
+  text-align:center;
+  background:var(--bg-primary);
+  position:relative;
+  overflow:hidden;
+}
+.cta-section::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:600px;
+  height:600px;
+  background:radial-gradient(circle,rgba(59,130,246,0.15) 0%,transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2{
+  font-size:48px;
+  font-weight:800;
+  position:relative;
+  margin-bottom:20px;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -1px;
+}
+.cta-section p{
+  color:#94a3b8;
+  font-size:18px;
+  margin-bottom:40px;
+  position:relative;
+  max-width: 600px;
+  margin-inline: auto;
+}
+footer{
+  background:#0a0a0a;
+  border-top:1px solid rgba(255,255,255,0.05);
+  padding:32px 60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+footer p{
+  font-size:13px;
+  color:#64748b;
+}
+@media(max-width:768px){
+  .hero-note{font-size:14px;margin:0 auto 24px;max-width:100%;}
+  .section-title{font-size:38px;}
+}
+@media(max-width:425px){
+  .hero-note{font-size:13px;padding:14px 12px;margin:0 auto 20px;}
+  .section-title{font-size:34px;}
+}
+@media(max-width:375px){
+  .hero-note{font-size:12px;padding:12px 10px;}
+  .section-title{font-size:30px;}
+}
+@media(max-width:320px){
+  .hero-note{font-size:11px;padding:10px 8px;line-height:1.5;}
+  .section-title{font-size:26px;}
+}
+@media(max-width:900px){
+  .features-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  .hero-title{
+    font-size:38px;
+  }
+  .features{
+    padding:60px 24px;
+  }
+  .cta-section{
+    padding:60px 24px;
+  }
+  nav{
+    padding:16px 24px;
+  }
+}
+@media(max-width:600px){
+  .features-grid{
+    grid-template-columns:1fr;
+  }
+  .hero-title{
+    font-size:30px;
+  }
+  .nav-links{
+    display:none;
+  }
+  .hero-body{
+    padding:60px 20px 40px;
+  }
+  footer{
+    flex-direction:column;
+    gap:8px;
+    text-align:center;
+    padding:20px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="hero">
+  <nav>
+      <div class="nav-brand">
+    BIGDATA CENTER AND AI
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="nav-cta">
+      <a href="login.html"><button class="btn-outline">Login</button></a>
+    </div>
+  </nav>
+
+  <div class="hero-body">
+    <div class="hero-badge">Cameroon's Leading Tech Internship Hub · Est. 2019</div>
+    <h1 class="hero-title">BIGDATA CENTER<br><span>& AI</span> Intern Portal</h1>
+    <p class="hero-sub">Akwa-Douala's premier tech hub hosting interns in Big Data, AI, Software Dev, Networks &amp; more. Join 55+ alumni across 4 cohorts since 2019.</p>
+    <div class="hero-note"><strong>Before you apply:</strong> Review the complete intern registry (2019–2026) in the <strong>STAGE CHEZ BDC</strong> folder to see alumni profiles, placement details, and program outcomes.</div>
+    <div class="hero-cta">
+      <a href="register.html?role=intern" class="btn-hero-primary">Apply as Intern</a>
+      <a href="login.html" class="btn-hero-outline">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<section class="features" id="features">
+  <h2 class="section-title">Everything You Need</h2>
+  <p class="section-sub">Built for HR teams, supervisors, and interns — all in one place.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>Admin Dashboard</h3>
+      <p>Live overview of all interns, task statuses, attendance records, and pending approvals at a glance.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Task Management</h3>
+      <p>Assign tasks with deadlines and priorities. Track submissions and provide feedback instantly.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Attendance Tracking</h3>
+      <p>Interns check in daily with automatic time recording. Admins monitor attendance in real-time.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Secure Authentication</h3>
+      <p>Role-based access control. Intern accounts require admin approval before gaining access.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Interactive Calendar</h3>
+      <p>Visual calendar showing internship dates, task deadlines, meetings, and important events.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Evaluation & Reports</h3>
+      <p>Grade interns at internship end, add performance feedback, and generate comprehensive reports.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT BDC ── -->
+<section id="about">
+  <div style="max-width:1200px;margin:0 auto;">
+    <h2 class="section-title">About <span style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">BIGDATA CENTER & AI</span></h2>
+    <p class="section-sub">Founded in 2019 · Akwa-Douala, Cameroun · +237 656 286 990 · bigdatacenterinfos@gmail.com</p>
+
+    <!-- Stats row -->
+    <div class="about-stats-row">
+      <div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.1);border-radius:24px;padding:32px;text-align:center;backdrop-filter:blur(10px);">
+        <div style="font-size:3.5rem;font-weight:900;color:#60a5fa;line-height:1;font-family:'Outfit',sans-serif;">55+</div>
+        <div style="font-size:13px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.15em;margin-top:12px;">Alumni Interns</div>
+      </div>
+      <div style="background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.1);border-radius:24px;padding:32px;text-align:center;backdrop-filter:blur(10px);">
+        <div style="font-size:3.5rem;font-weight:900;color:#a78bfa;line-height:1;font-family:'Outfit',sans-serif;">~70%</div>
+        <div style="font-size:13px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.15em;margin-top:12px;">Admission Rate</div>
+      </div>
+      <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.1);border-radius:24px;padding:32px;text-align:center;backdrop-filter:blur(10px);">
+        <div style="font-size:3.5rem;font-weight:900;color:#34d399;line-height:1;font-family:'Outfit',sans-serif;">9+</div>
+        <div style="font-size:13px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.15em;margin-top:12px;">Partner Schools</div>
+      </div>
+      <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.1);border-radius:24px;padding:32px;text-align:center;backdrop-filter:blur(10px);">
+        <div style="font-size:3.5rem;font-weight:900;color:#fbbf24;line-height:1;font-family:'Outfit',sans-serif;">8</div>
+        <div style="font-size:13px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.15em;margin-top:12px;">Active Departments</div>
+      </div>
+    </div>
+
+    <div class="about-details-row">
+      <!-- Departments -->
+      <div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#6366f1;font-weight:700;margin-bottom:16px;">Our Departments</div>
+        <div class="about-departments-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
+            <div style="font-size:13px;font-weight:600;">Software Dev</div>
+            <div style="font-size:11px;color:#64748b;">Web &amp; App Development</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
+            <div style="font-size:13px;font-weight:600;">Big Data &amp; AI</div>
+            <div style="font-size:11px;color:#64748b;">Machine Learning &amp; Analytics</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
+            <div style="font-size:13px;font-weight:600;">Infra &amp; Networks</div>
+            <div style="font-size:11px;color:#64748b;">Systems &amp; Network Admin</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
+            <div style="font-size:13px;font-weight:600;">FabLab / UX-UI</div>
+            <div style="font-size:11px;color:#64748b;">Design &amp; Prototyping</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
+            <div style="font-size:13px;font-weight:600;">IT Project Mgmt</div>
+            <div style="font-size:11px;color:#64748b;">Agile &amp; IT Coordination</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;">
+            <div style="font-size:13px;font-weight:600;">Archives &amp; Docs</div>
+            <div style="font-size:11px;color:#64748b;">Documentation Systems</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Process + Partner Schools -->
+      <div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#10b981;font-weight:700;margin-bottom:16px;">Internship Process</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">1</div>
+            <div style="font-size:13px;color:#94a3b8;">Application received &amp; reviewed within <strong style="color:#e2e8f0;">24–48h</strong></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">2</div>
+            <div style="font-size:13px;color:#94a3b8;"><strong style="color:#e2e8f0;">Interview</strong> — in-person or remote (WhatsApp/Zoom)</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">3</div>
+            <div style="font-size:13px;color:#94a3b8;"><strong style="color:#e2e8f0;">Integration week</strong> with daily challenges &amp; final selection</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#4f46e5);display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">4</div>
+            <div style="font-size:13px;color:#94a3b8;">Active internship with <strong style="color:#e2e8f0;">daily reports</strong> &amp; supervisor feedback</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">5</div>
+            <div style="font-size:13px;color:#94a3b8;">Final report review + <strong style="color:#10b981;">Official Certificate</strong> delivery</div>
+          </div>
+        </div>
+
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#f59e0b;font-weight:700;margin-bottom:10px;">Partner Schools</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:4px 10px;font-size:11px;color:#fcd34d;">IME School</span>
+          <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:4px 10px;font-size:11px;color:#fcd34d;">ISETAG</span>
+          <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:4px 10px;font-size:11px;color:#fcd34d;">IUT Douala</span>
+          <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:4px 10px;font-size:11px;color:#fcd34d;">LEISAM Academy</span>
+          <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:4px 10px;font-size:11px;color:#fcd34d;">Univ. Douala</span>
+          <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:4px 10px;font-size:11px;color:#fcd34d;">ENSP Polytec</span>
+          <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:4px 10px;font-size:11px;color:#fcd34d;">Universal Groups</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Ready to Get Started?</h2>
+  <p>Join the smarter way to manage your internship program today.</p>
+  <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;">
+    <a href="register.html?role=intern" class="btn-hero-outline">Register as Intern</a>
+  </div>
+  <p style="text-align:center;color:#94a3b8;font-size:13px;margin-top:16px;">Admin access is available at <code>/login.html?role=admin</code> and the dashboard is at <code>http://localhost:5000/admin/dashboard.html</code> after signing in.</p>
+</section>
+
+<footer>
+  <div>
+    <p style="font-size:15px;font-weight:800;color:#f0f2ff;margin-bottom:4px;">BIGDATA CENTER AND AI</p>
+    <p>SARLU · Akwa-Douala, Cameroun · Est. 2019</p>
+  </div>
+  <div style="text-align:right;">
+    <p>+237 656 286 990</p>
+    <p>bigdatacenterinfos@gmail.com</p>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+</body>
+</html>

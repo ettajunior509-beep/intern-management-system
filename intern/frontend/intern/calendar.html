@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Calendar – InternMS Intern</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.cal-nav{display:flex;align-items:center;gap:12px;}
+.cal-nav button{background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:16px;transition:var(--transition);}
+.cal-nav button:hover{background:var(--bg-card-hover);}
+.cal-month{font-size:18px;font-weight:700;min-width:180px;text-align:center;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day-name{text-align:center;font-size:11px;font-weight:600;color:var(--text-muted);padding:8px 0;text-transform:uppercase;}
+.cal-day{min-height:80px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px;transition:var(--transition);}
+.cal-day.today{border-color:var(--accent);background:var(--accent-glow);}
+.cal-day.other-month{opacity:0.3;}
+.cal-day.has-event{cursor:pointer;} .cal-day.has-event:hover{border-color:var(--accent);}
+.day-num{font-size:13px;font-weight:600;margin-bottom:4px;}
+.cal-day.today .day-num{color:var(--accent-light);}
+.cal-day.att-present{border-color:rgba(16,185,129,0.4);}
+.cal-day.att-late{border-color:rgba(245,158,11,0.4);}
+.cal-day.att-absent{border-color:rgba(239,68,68,0.3);}
+.event-dot{font-size:10px;padding:1px 5px;border-radius:99px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.event-meeting{background:rgba(99,102,241,0.2);color:#818cf8;}
+.event-task{background:rgba(245,158,11,0.2);color:#fbbf24;}
+.event-start{background:rgba(16,185,129,0.2);color:#34d399;}
+.event-end{background:rgba(239,68,68,0.2);color:#f87171;}
+.event-other{background:rgba(148,163,184,0.15);color:#94a3b8;}
+.event-att{background:rgba(16,185,129,0.2);color:#34d399;font-size:10px;}
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Intern Portal</div></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html"  class="nav-item"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="tasks.html"      class="nav-item"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>My Tasks</a>
+      <a href="attendance.html" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <a href="calendar.html"   class="nav-item active"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"    class="nav-item"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>My Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">I</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Intern</div><div class="sidebar-user-role">Intern</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">My Calendar</div><div class="topbar-subtitle">Schedule, tasks & attendance</div></div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="grid-2" style="gap:24px;">
+        <div class="card" style="grid-column:span 2;">
+          <div class="cal-header">
+            <div class="cal-nav">
+              <button onclick="changeMonth(-1)">‹</button>
+              <div class="cal-month" id="cal-month-label">—</div>
+              <button onclick="changeMonth(1)">›</button>
+            </div>
+            <div class="flex gap-8" style="flex-wrap:wrap;">
+              <span style="background:rgba(16,185,129,0.2);color:#34d399;padding:2px 8px;border-radius:99px;font-size:11px;">Present</span>
+              <span style="background:rgba(245,158,11,0.2);color:#fbbf24;padding:2px 8px;border-radius:99px;font-size:11px;">Late</span>
+              <span style="background:rgba(99,102,241,0.2);color:#818cf8;padding:2px 8px;border-radius:99px;font-size:11px;">Event</span>
+            </div>
+          </div>
+          <div class="cal-grid" id="cal-grid">
+            <div class="cal-day-name">Sun</div><div class="cal-day-name">Mon</div><div class="cal-day-name">Tue</div>
+            <div class="cal-day-name">Wed</div><div class="cal-day-name">Thu</div><div class="cal-day-name">Fri</div><div class="cal-day-name">Sat</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Upcoming Events</div></div>
+          <div id="upcoming-list"><p class="text-muted">Loading...</p></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Upcoming Task Deadlines</div></div>
+          <div id="deadline-list"><p class="text-muted">Loading...</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireIntern(); populateSidebarUser(); initLogout();
+let currentDate=new Date(), allEvents=[], attRecords=[], myTasks=[];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function getEventClass(type){const m={meeting:'event-meeting',task_deadline:'event-task',internship_start:'event-start',internship_end:'event-end',other:'event-other'};return m[type]||'event-other';}
+
+function renderCalendar() {
+  const y=currentDate.getFullYear(), m=currentDate.getMonth();
+  document.getElementById('cal-month-label').textContent=`${MONTHS[m]} ${y}`;
+  const grid=document.getElementById('cal-grid');
+  while(grid.children.length>7) grid.removeChild(grid.lastChild);
+  const first=new Date(y,m,1).getDay(), daysInMonth=new Date(y,m+1,0).getDate(), prevDays=new Date(y,m,0).getDate();
+  const today=new Date().toISOString().split('T')[0];
+  const attMap={};
+  attRecords.forEach(r=>{ attMap[r.date?.split('T')[0]]=r.status; });
+
+  for(let i=0;i<first;i++){const d=document.createElement('div');d.className='cal-day other-month';d.innerHTML=`<div class="day-num">${prevDays-first+i+1}</div>`;grid.appendChild(d);}
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayEl=document.createElement('div');
+    const attStatus=attMap[dateStr];
+    let cls='cal-day'+(dateStr===today?' today':'')+(attStatus?' att-'+attStatus:'');
+    dayEl.className=cls;
+    const dayEvents=allEvents.filter(e=>e.event_date?.split('T')[0]===dateStr);
+    dayEl.innerHTML=`<div class="day-num">${d}</div>`+(attStatus?`<div class="event-dot event-att">${attStatus==='present'?'✅':attStatus==='late'?'⏰':'❌'} ${attStatus}</div>`:'')+dayEvents.slice(0,2).map(e=>`<div class="event-dot ${getEventClass(e.event_type)}">${e.title}</div>`).join('');
+    grid.appendChild(dayEl);
+  }
+  const rem=(7-((first+daysInMonth)%7))%7;
+  for(let d=1;d<=rem;d++){const el=document.createElement('div');el.className='cal-day other-month';el.innerHTML=`<div class="day-num">${d}</div>`;grid.appendChild(el);}
+}
+
+function changeMonth(dir){currentDate.setMonth(currentDate.getMonth()+dir);renderCalendar();}
+
+async function loadAll() {
+  try {
+    [allEvents,attRecords,myTasks]=await Promise.all([apiFetch('/calendar'),apiFetch('/attendance/my'),apiFetch('/tasks/my')]);
+    renderCalendar();
+    renderUpcoming();
+    renderDeadlines();
+  } catch(e){toast(e.message,'error');}
+}
+
+function renderUpcoming() {
+  const today=new Date().toISOString().split('T')[0];
+  const upcoming=allEvents.filter(e=>e.event_date?.split('T')[0]>=today).slice(0,6);
+  const el=document.getElementById('upcoming-list');
+  if(!upcoming.length){el.innerHTML='<div class="empty-state"><p>No upcoming events</p></div>';return;}
+  el.innerHTML=upcoming.map(e=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="text-align:center;min-width:36px;"><div style="font-size:16px;font-weight:800;color:var(--accent-light);">${new Date(e.event_date).getDate()}</div><div style="font-size:10px;color:var(--text-muted);">${MONTHS[new Date(e.event_date).getMonth()].slice(0,3)}</div></div>
+      <div><div style="font-size:13px;font-weight:600;">${e.title}</div><div class="event-dot ${getEventClass(e.event_type)}" style="display:inline-flex;margin-top:4px;">${e.event_type.replace(/_/g,' ')}</div></div>
+    </div>`).join('');
+}
+
+function renderDeadlines() {
+  const today=new Date().toISOString().split('T')[0];
+  const upcoming=myTasks.filter(t=>t.deadline&&t.deadline.split('T')[0]>=today&&t.status!=='approved').sort((a,b)=>new Date(a.deadline)-new Date(b.deadline)).slice(0,6);
+  const el=document.getElementById('deadline-list');
+  if(!upcoming.length){el.innerHTML='<div class="empty-state"><p>No upcoming deadlines</p></div>';return;}
+  el.innerHTML=upcoming.map(t=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="text-align:center;min-width:36px;"><div style="font-size:16px;font-weight:800;color:var(--warning);">${new Date(t.deadline).getDate()}</div><div style="font-size:10px;color:var(--text-muted);">${MONTHS[new Date(t.deadline).getMonth()].slice(0,3)}</div></div>
+      <div><div style="font-size:13px;font-weight:600;">${t.title}</div><div style="margin-top:4px;display:flex;gap:6px;">${priorityBadge(t.priority)}${statusBadge(t.status)}</div></div>
+    </div>`).join('');
+}
+loadAll();
+</script>
+</body>
+</html>

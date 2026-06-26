@@ -1,0 +1,227 @@
+
+1. Authentication System
+
+Admin Registration and Login
+
+Intern Registration and Login
+
+Email validation and password encryption
+
+Prevent duplicate email registration
+
+Intern account must be approved by Admin before login access
+
+2. Admin Features
+
+Admin Dashboard
+
+The Admin dashboard should display:
+
+Total number of interns
+
+Active interns
+
+Pending registrations
+
+Assigned tasks
+
+Attendance records
+
+Internship progress overview
+
+
+Admin Functionalities
+
+Register and Login
+
+Approve or reject intern registration
+
+Add, edit, and delete interns
+
+Assign tasks to interns
+
+Approve submitted tasks
+
+View attendance records
+
+View internship starting date
+
+Grade interns at the end of the internship
+
+Generate reports
+
+Manage intern profiles
+
+View calendar of internship activities
+
+
+Admin Profile
+
+Full name
+
+Email
+
+Phone number
+
+Position
+
+Profile picture
+
+Change password option
+
+3. Intern Features
+
+Intern Dashboard
+
+The Intern dashboard should display:
+
+Assigned tasks
+
+Task status
+
+Internship start date
+
+Attendance history
+
+Calendar schedule
+
+Notifications from Admin
+
+Final grade/result
+
+
+Intern Functionalities
+
+Register and Login
+
+Wait for Admin approval before accessing dashboard
+
+Update personal profile
+
+View assigned tasks
+
+Submit completed tasks
+
+Record attendance/check-in time when arriving at work
+
+View internship calendar
+
+Track internship duration and progress
+
+
+Intern Profile
+
+Full name
+
+Email
+
+School/University
+
+Department
+
+Internship start date
+
+Internship end date
+
+Profile picture
+
+Change password option
+
+4. Calendar System
+
+Create an interactive calendar that shows:
+
+Internship starting date
+
+Daily attendance
+
+Task deadlines
+
+Meeting schedules
+
+Internship ending date
+
+5. Attendance Management
+
+The system should:
+
+Allow interns to check in daily
+
+Record arrival time automatically
+
+Store attendance history
+
+Allow Admin to monitor attendance
+
+6. Task Management
+
+Admin assigns tasks
+
+Intern views assigned tasks
+
+Intern submits completed tasks
+
+Admin approves or rejects submitted tasks
+
+Task progress tracking
+
+7. Internship Evaluation
+
+At the end of the internship:
+
+Admin can grade interns
+
+Add comments and performance feedback
+
+Generate internship evaluation report
+
+8. Suggested Technologies
+
+Frontend
+
+React.js
+
+Backend
+
+Node.js with Express.js
+
+Database
+
+MySQL
+
+
+9. Suggested Pages
+
+Home Page
+
+About Page
+
+Login/Register Page
+
+Admin Dashboard
+
+Intern Dashboard
+
+Attendance Page
+
+Task Management Page
+
+Calendar Page
+
+Profile Page
+
+Reports Page
+
+10. UI/UX Requirements
+
+Modern dark/light theme
+
+Responsive design for mobile and desktop
+
+Sidebar navigation
+
+Dashboard cards and charts
+
+Notifications system
+
+Clean and professional interface

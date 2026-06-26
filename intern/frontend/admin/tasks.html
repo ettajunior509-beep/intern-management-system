@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tasks – InternMS Admin</title>
+<link rel="stylesheet" href="../css/style.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div><div class="logo-text">InternMS</div><div class="logo-sub">Admin Portal</div></div></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="dashboard.html" class="nav-item active" data-page="dashboard.html"><span class="nav-icon"><i class="fa-solid fa-square-poll-horizontal"></i></span>Dashboard</a>
+      <a href="interns.html"   class="nav-item" data-page="interns.html"><span class="nav-icon"><i class="fa-solid fa-users"></i></span>Interns</a>
+      <a href="tasks.html"     class="nav-item" data-page="tasks.html"><span class="nav-icon"><i class="fa-solid fa-check"></i></span>Tasks</a>
+      <a href="attendance.html"class="nav-item" data-page="attendance.html"><span class="nav-icon"><i class="fa-solid fa-address-book"></i></span>Attendance</a>
+      <div class="nav-section-label">Tools</div>
+      <a href="calendar.html"  class="nav-item" data-page="calendar.html"><span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>Calendar</a>
+      <a href="reports.html"   class="nav-item" data-page="reports.html"><span class="nav-icon"><i class="fa-regular fa-address-book"></i></span>Reports</a>
+      <a href="evaluations.html" class="nav-item" data-page="evaluations.html"><span class="nav-icon"><i class="fa-brands fa-galactic-senate"></i></span>Evaluations</a>
+      <div class="nav-section-label">Account</div>
+      <a href="profile.html"   class="nav-item" data-page="profile.html"><span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-user-avatar">A</div>
+        <div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebar-user-name">Admin</div><div class="sidebar-user-role">Administrator</div></div>
+        <button data-logout style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;"><i class="fa-solid fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" onclick="document.querySelector('.sidebar').classList.remove('open');this.style.display='none';"></div>
+
+  <main class="main-content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').style.display='block';">☰</button>
+        <div><div class="topbar-title">Tasks</div><div class="topbar-subtitle">Assign and manage intern tasks</div></div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary" onclick="openAssignModal()">+ Assign Task</button>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="filter-bar">
+        <div class="search-input"><span><i class="fa-solid fa-magnifying-glass-minus"></i></span><input type="text" id="search" placeholder="Search tasks..." oninput="filterTasks()"></div>
+        <select class="form-control" style="width:150px;" id="status-filter" onchange="filterTasks()">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="submitted">Submitted</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <select class="form-control" style="width:180px;" id="intern-filter" onchange="filterTasks()">
+          <option value="">All Interns</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Title</th><th>Intern</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Submitted</th><th>Actions</th></tr></thead>
+            <tbody id="tasks-body"><tr><td colspan="7" class="text-center text-muted" style="padding:40px;">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Assign Task Modal -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="task-modal-title">Assign Task</div><button class="modal-close" onclick="closeTaskModal()">✕</button></div>
+    <form id="task-form">
+      <div class="form-group"><label class="form-label">Task Title</label><input class="form-control" id="t-title" placeholder="Task title" required></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="t-desc" placeholder="Task details..."></textarea></div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Assign To</label>
+          <select class="form-control" id="t-intern" required><option value="">Select intern...</option></select></div>
+        <div class="form-group"><label class="form-label">Priority</label>
+          <select class="form-control" id="t-priority"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Deadline</label><input type="date" class="form-control" id="t-deadline"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeTaskModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="task-btn">Assign Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="review-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Review Submission</div><button class="modal-close" onclick="document.getElementById('review-modal').classList.remove('open')">✕</button></div>
+    <div id="review-content"></div>
+    <div class="form-group" style="margin-top:16px;"><label class="form-label">Admin Feedback</label><textarea class="form-control" id="review-feedback" placeholder="Provide feedback..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="reviewTask('rejected')">✗ Reject</button>
+      <button class="btn btn-success" onclick="reviewTask('approved')">✓ Approve</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/app.js"></script>
+<script>
+Auth.requireAdmin(); populateSidebarUser(); initLogout();
+let allTasks=[], allInterns=[], editTaskId=null, reviewTaskId=null;
+
+async function loadData() {
+  try {
+    [allTasks, allInterns] = await Promise.all([apiFetch('/tasks'), apiFetch('/interns?status=approved')]);
+    renderTasks(allTasks);
+    const sel1=document.getElementById('t-intern'), sel2=document.getElementById('intern-filter');
+    allInterns.forEach(i=>{
+      sel1.innerHTML+=`<option value="${i.id}">${i.full_name}</option>`;
+      sel2.innerHTML+=`<option value="${i.id}">${i.full_name}</option>`;
+    });
+  } catch(e){toast(e.message,'error');}
+}
+
+function renderTasks(list) {
+  const tb=document.getElementById('tasks-body');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty-state"><p>No tasks found</p></div></td></tr>';return;}
+  tb.innerHTML=list.map(t=>`
+    <tr>
+      <td><div style="font-weight:600;font-size:13px;">${t.title}</div><div style="font-size:12px;color:var(--text-muted);">${(t.description||'').substring(0,50)}${t.description&&t.description.length>50?'...':''}</div></td>
+      <td>${t.intern_name||'—'}</td>
+      <td>${priorityBadge(t.priority)}</td>
+      <td>${fmtDate(t.deadline)}</td>
+      <td>${statusBadge(t.status)}</td>
+      <td>${t.submitted_at?fmtDate(t.submitted_at):'—'}</td>
+      <td><div class="flex gap-8">
+        ${t.status==='submitted'?`<button class="btn btn-warning btn-sm" onclick="openReview(${t.id})">Review</button>`:''}
+        <button class="btn btn-danger btn-sm" onclick="deleteTask(${t.id})">🗑️</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function filterTasks(){
+  const q=document.getElementById('search').value.toLowerCase(), s=document.getElementById('status-filter').value, iid=document.getElementById('intern-filter').value;
+  renderTasks(allTasks.filter(t=>(!s||t.status===s)&&(!iid||t.intern_id==iid)&&(!q||t.title.toLowerCase().includes(q)||(t.intern_name||'').toLowerCase().includes(q))));
+}
+function openAssignModal(){editTaskId=null;document.getElementById('task-modal-title').textContent='Assign Task';document.getElementById('task-btn').textContent='Assign Task';document.getElementById('task-form').reset();document.getElementById('task-modal').classList.add('open');}
+function closeTaskModal(){document.getElementById('task-modal').classList.remove('open');}
+
+document.getElementById('task-form').addEventListener('submit',async e=>{
+  e.preventDefault(); const btn=document.getElementById('task-btn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    await apiFetch('/tasks',{method:'POST',body:JSON.stringify({title:document.getElementById('t-title').value,description:document.getElementById('t-desc').value,intern_id:document.getElementById('t-intern').value,priority:document.getElementById('t-priority').value,deadline:document.getElementById('t-deadline').value})});
+    toast('Task assigned!','success'); closeTaskModal(); loadData();
+  } catch(e){toast(e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='Assign Task';}
+});
+
+function openReview(id) {
+  reviewTaskId=id; const t=allTasks.find(x=>x.id===id); if(!t)return;
+  document.getElementById('review-content').innerHTML=`
+    <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:16px;margin-bottom:12px;">
+      <div style="font-weight:700;margin-bottom:8px;">${t.title}</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">${t.description||''}</div>
+      <div class="form-label">Intern Submission</div>
+      <div style="font-size:13px;margin-top:6px;">${t.submission_text||'No text submitted.'}</div>
+    </div>`;
+  document.getElementById('review-feedback').value='';
+  document.getElementById('review-modal').classList.add('open');
+}
+async function reviewTask(status){
+  try {
+    await apiFetch(`/tasks/${reviewTaskId}/review`,{method:'PATCH',body:JSON.stringify({status,admin_feedback:document.getElementById('review-feedback').value})});
+    toast(`Task ${status}!`,status==='approved'?'success':'info');
+    document.getElementById('review-modal').classList.remove('open'); loadData();
+  } catch(e){toast(e.message,'error');}
+}
+async function deleteTask(id){if(!confirm('Delete this task?'))return;try{await apiFetch(`/tasks/${id}`,{method:'DELETE'});toast('Deleted','success');loadData();}catch(e){toast(e.message,'error');}}
+loadData();
+</script>
+</body>
+</html>
