@@ -80,6 +80,9 @@ app.get('*', (req, res) => {
 
 // ── Start Server ───────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const initializeDatabase = require('./intern/backend/initDb');
+
+app.listen(PORT, async () => {
   console.log(`🚀 Intern Management Server running on http://localhost:${PORT}`);
+  await initializeDatabase();
 });
