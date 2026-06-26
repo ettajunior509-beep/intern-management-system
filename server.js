@@ -11,27 +11,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ── Static Files ───────────────────────────────────────────
-app.use(express.static(path.join(__dirname, '../frontend')));
-app.use('/uploads', express.static(path.join(__dirname, '../frontend/uploads')));
-app.use('/image', express.static(path.join(__dirname, '../image')));
+app.use(express.static(path.join(__dirname, 'intern/frontend')));
+app.use('/uploads', express.static(path.join(__dirname, 'intern/frontend/uploads')));
+app.use('/image', express.static(path.join(__dirname, 'intern/image')));
 
 // ── API Routes ─────────────────────────────────────────────
-app.use('/api/auth',          require('./routes/auth'));
-app.use('/api/interns',       require('./routes/interns'));
-app.use('/api/tasks',         require('./routes/tasks'));
-app.use('/api/attendance',    require('./routes/attendance'));
-app.use('/api/calendar',      require('./routes/calendar'));
-app.use('/api/notifications', require('./routes/notifications'));
-app.use('/api/evaluations',   require('./routes/evaluations'));
-app.use('/api/reports',       require('./routes/reports'));
+app.use('/api/auth',          require('./intern/backend/routes/auth'));
+app.use('/api/interns',       require('./intern/backend/routes/interns'));
+app.use('/api/tasks',         require('./intern/backend/routes/tasks'));
+app.use('/api/attendance',    require('./intern/backend/routes/attendance'));
+app.use('/api/calendar',      require('./intern/backend/routes/calendar'));
+app.use('/api/notifications', require('./intern/backend/routes/notifications'));
+app.use('/api/evaluations',   require('./intern/backend/routes/evaluations'));
+app.use('/api/reports',       require('./intern/backend/routes/reports'));
 
 // ── Admin profile routes ────────────────────────────────────
-const db = require('./config/db');
+const db = require('./db');
 const bcrypt = require('bcryptjs');
-const { verifyAdmin } = require('./middleware/auth');
+const { verifyAdmin } = require('./auth');
 const multer = require('multer');
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '../frontend/uploads')),
+  destination: (req, file, cb) => cb(null, path.join(__dirname, 'intern/frontend/uploads')),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
@@ -75,7 +75,7 @@ app.post('/api/admin/avatar', verifyAdmin, upload.single('avatar'), async (req, 
 
 // ── Catch-all → serve frontend ─────────────────────────────
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, 'intern/frontend/index.html'));
 });
 
 // ── Start Server ───────────────────────────────────────────
